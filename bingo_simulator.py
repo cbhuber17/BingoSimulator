@@ -220,49 +220,38 @@ class BingoSimulator:
     def print_summary(self):
 
         percentage_factor = float(self.num_simulations / 100.0)
+        bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
 
         print("\nSummary:\n")
-        print("Row 0 bingo: {}, {}%".format(self.num_line_bingo[0][0],
-                                            float(self.num_line_bingo[0][0] / percentage_factor)))
-        print("Row 1 bingo: {}, {}%".format(self.num_line_bingo[0][1],
-                                            float(self.num_line_bingo[0][1] / percentage_factor)))
-        print("Row 2 bingo: {}, {}%".format(self.num_line_bingo[0][2],
-                                            float(self.num_line_bingo[0][2] / percentage_factor)))
-        print("Row 3 bingo: {}, {}%".format(self.num_line_bingo[0][3],
-                                            float(self.num_line_bingo[0][3] / percentage_factor)))
-        print("Row 4 bingo: {}, {}%".format(self.num_line_bingo[0][4],
-                                            float(self.num_line_bingo[0][4] / percentage_factor)))
 
-        row_bingo = self.num_line_bingo[0][0] + self.num_line_bingo[0][1] + self.num_line_bingo[0][2] + \
-                    self.num_line_bingo[0][3] + self.num_line_bingo[0][4]
+        row_bingo = 0
+        col_bingo = 0
+        diag_bingo = 0
+
+        for i in range(0, self.card_length):
+            print("Row {} bingo: {}, {}%".format(i, self.num_line_bingo[0][i],
+                                                 float(self.num_line_bingo[0][i] / percentage_factor)))
+
+            row_bingo += self.num_line_bingo[0][i]
 
         print("Row Bingo: {}, {}%\n".format(row_bingo, float(row_bingo / percentage_factor)))
 
-        print("Under B bingo: {}, {}%".format(self.num_line_bingo[1][0],
-                                              float(self.num_line_bingo[1][0] / percentage_factor)))
-        print("Under I bingo: {}, {}%".format(self.num_line_bingo[1][1],
-                                              float(self.num_line_bingo[1][1] / percentage_factor)))
-        print("Under N bingo: {}, {}%".format(self.num_line_bingo[1][2],
-                                              float(self.num_line_bingo[1][2] / percentage_factor)))
-        print("Under G bingo: {}, {}%".format(self.num_line_bingo[1][3],
-                                              float(self.num_line_bingo[1][3] / percentage_factor)))
-        print("Under O bingo: {}, {}%".format(self.num_line_bingo[1][4],
-                                              float(self.num_line_bingo[1][4] / percentage_factor)))
-
-        col_bingo = self.num_line_bingo[1][0] + self.num_line_bingo[1][1] + self.num_line_bingo[1][2] + \
-                    self.num_line_bingo[1][3] + self.num_line_bingo[1][4]
+        for i in range(0, self.card_length):
+            print("Under {} bingo: {}, {}%".format(bingo_ref[i], self.num_line_bingo[1][i],
+                                                   float(self.num_line_bingo[1][i] / percentage_factor)))
+            col_bingo += self.num_line_bingo[1][i]
 
         print("Column Bingo: {}, {}%\n".format(col_bingo, float(col_bingo / percentage_factor)))
 
-        print("Line Bingo: {}, {}%\n".format(row_bingo + col_bingo, float((row_bingo + col_bingo) / percentage_factor)))
+        line_bingo = row_bingo + col_bingo
+        print("Line Bingo: {}, {}%\n".format(line_bingo, float(line_bingo / percentage_factor)))
 
-        print("Diagonal 1 bingo: {}, {}%".format(self.num_diag_bingo[0],
-                                                 float(self.num_diag_bingo[0] / percentage_factor)))
-        print("Diagonal 2 bingo: {}, {}%".format(self.num_diag_bingo[1],
-                                                 float(self.num_diag_bingo[1] / percentage_factor)))
+        for i in [0, 1]:
+            print("Diagonal {} bingo: {}, {}%".format(i+1, self.num_diag_bingo[i],
+                                                      float(self.num_diag_bingo[i] / percentage_factor)))
+            diag_bingo += self.num_diag_bingo[i]
 
-        print("Diagonal bingo: {}, {}%\n".format(self.num_diag_bingo[0] + self.num_diag_bingo[1], float(
-            (self.num_diag_bingo[0] + self.num_diag_bingo[1]) / percentage_factor)))
+        print("Diagonal bingo: {}, {}%\n".format(diag_bingo, float(diag_bingo / percentage_factor)))
 
         print("Corners bingo: {}, {}%\n".format(self.num_corners_bingo,
                                                 float(self.num_corners_bingo / percentage_factor)))
@@ -280,4 +269,3 @@ if __name__ == '__main__':
         bingo_game.play_bingo()
 
     bingo_game.print_summary()
-
