@@ -214,9 +214,9 @@ class BingoSimulator:
 
 if __name__ == '__main__':
 
-    bingo_game = BingoSimulator(1000)
+    bingo_game_sim = BingoSimulator(1000)
 
-    for _ in range(bingo_game.num_simulations):
-        bingo_game.play_bingo()
+    for _ in range(bingo_game_sim.num_simulations):
+        bingo_game_sim.play_bingo()
 
-    bingo_game.print_summary()
+    bingo_game_sim.print_summary()
