@@ -232,30 +232,30 @@ class BingoSimulator:
     def print_summary(self):
 
         bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
+        axis_ref = {0: "Row", 1: "Column"}
 
         print("\nSummary:\n")
 
-        row_bingo = 0
-        col_bingo = 0
+        axis_bingo = [0, 0]  # Row, column
+        line_bingo = 0
         diag_bingo = 0
 
-        for i in range(0, self.card_length):
-            self.print_bingo_result(f"Row {i}", self.num_line_bingo[0][i])
-            row_bingo += self.num_line_bingo[0][i]
+        for axis in [0, 1]:
+            for i in range(0, self.card_length):
+                if axis == 0:
+                    self.print_bingo_result(f"{axis_ref[axis]} {i}", self.num_line_bingo[axis][i])
+                else:
+                    self.print_bingo_result(f"{axis_ref[axis]} {bingo_ref[i]}", self.num_line_bingo[axis][i])
 
-        self.print_bingo_result("Row", row_bingo)
+                axis_bingo[axis] += self.num_line_bingo[axis][i]
 
-        for i in range(0, self.card_length):
-            self.print_bingo_result("Under {}".format(bingo_ref[i]), self.num_line_bingo[1][i])
-            col_bingo += self.num_line_bingo[1][i]
+            self.print_bingo_result(f"{axis_ref[axis]}", axis_bingo[axis])
+            line_bingo += axis_bingo[axis]
 
-        self.print_bingo_result("Column", col_bingo)
-
-        line_bingo = row_bingo + col_bingo
         self.print_bingo_result("Line", line_bingo)
 
         for i in [0, 1]:
-            self.print_bingo_result(f"Diagonal {i + 1}", self.num_diag_bingo[i])
+            self.print_bingo_result(f"Diagonal {i+1}", self.num_diag_bingo[i])
             diag_bingo += self.num_diag_bingo[i]
 
         self.print_bingo_result("Diagonal", diag_bingo)
