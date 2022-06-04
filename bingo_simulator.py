@@ -1,5 +1,4 @@
-import random
-import copy
+import bingo_card as bc
 
 
 class BingoSimulator:
@@ -7,10 +6,6 @@ class BingoSimulator:
     def __init__(self, num_simulations):
 
         self.num_simulations = num_simulations
-
-        # Typical BINGO card layout
-        self.card_length = 5  # 5x5 square card
-        self.column_range = 15  # 15 numbers per column to choose from
 
         # How many times a certain row/col got bingo
         # Axis = 0 = row
@@ -29,9 +24,9 @@ class BingoSimulator:
         # TODO: num tries row0-4 bingo, col0-4 bingo, diag, corners, etc.
 
         # Init histogram
-        for i in range(0, self.card_length * self.column_range + 1):
+        for i in range(0, bc.CARD_LENGTH * bc.COLUMN_RANGE + 1):
 
-            if i < self.card_length:
+            if i < bc.CARD_LENGTH:
                 self.num_line_bingo[0].append(0)  # Rows
                 self.num_line_bingo[1].append(0)  # Columns
 
@@ -45,13 +40,13 @@ class BingoSimulator:
             raise ValueError(f'Diagonal Number must be 1 or 2 in check_diagonal_bingo(): {diag_num}.')
 
         if diag_num == 1:
-            for i in range(0, self.card_length):
+            for i in range(0, bc.CARD_LENGTH):
                 if not card[i][i][True]:
                     return False
 
         elif diag_num == 2:
-            for i in range(0, self.card_length):
-                if not card[i][self.card_length - 1 - i][True]:
+            for i in range(0, bc.CARD_LENGTH):
+                if not card[i][bc.CARD_LENGTH - 1 - i][True]:
                     return False
 
         self.num_diag_bingo[diag_num - 1] += 1
@@ -64,15 +59,15 @@ class BingoSimulator:
         if axis not in [0, 1]:
             raise ValueError(f'Axis is not 0 (row) or 1 (column): {axis}.')
 
-        if line_num not in list(range(0, self.card_length)):
+        if line_num not in list(range(0, bc.CARD_LENGTH)):
             raise ValueError(f'Line number for axis {axis} must be 0-4 in check_line_bingo(): {line_num}.')
 
         if axis == 0:
-            for j in range(0, self.card_length):
+            for j in range(0, bc.CARD_LENGTH):
                 if not card[line_num][j][True]:
                     return False
         else:
-            for i in range(0, self.card_length):
+            for i in range(0, bc.CARD_LENGTH):
                 if not card[i][line_num][True]:
                     return False
 
@@ -84,9 +79,9 @@ class BingoSimulator:
     def check_corners_bingo(self, card):
 
         if card[0][0][True] and \
-                card[self.card_length - 1][0][True] and \
-                card[0][self.card_length - 1][True] and \
-                card[self.card_length - 1][self.card_length - 1][True]:
+                card[bc.CARD_LENGTH - 1][0][True] and \
+                card[0][bc.CARD_LENGTH - 1][True] and \
+                card[bc.CARD_LENGTH - 1][bc.CARD_LENGTH - 1][True]:
             self.num_corners_bingo += 1
             return True
 
@@ -99,7 +94,7 @@ class BingoSimulator:
         if self.check_corners_bingo(card):
             return True
 
-        for i in range(0, self.card_length):
+        for i in range(0, bc.CARD_LENGTH):
 
             if i in [1, 2] and self.check_diagonal_bingo(i, card):
                 return True
@@ -117,11 +112,11 @@ class BingoSimulator:
         print('|B | |I | |N | |G | |O |')
         print('------------------------')
 
-        for i in range(0, self.card_length):
+        for i in range(0, bc.CARD_LENGTH):
 
             if i > 0:
                 print('\n------------------------')
-            for j in range(0, self.card_length):
+            for j in range(0, bc.CARD_LENGTH):
                 print('|{:2}|'.format(card[i][j][True]), end=" ")
 
         print('\n------------------------\n\n')
@@ -130,60 +125,10 @@ class BingoSimulator:
 
     def play_bingo(self):
 
-        # Initialize
-        bingo_cell = [0, False]
-        bingo_card = [[bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                      [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                      [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                      [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                      [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell]]
-
-        # TODO: Better way to init card
-        bingo_card2 = []
-
-        for i in range(0, self.card_length):
-            bingo_card2.append(bingo_cell)
-
-        for j in range(0, self.card_length):
-            bingo_card2.append(bingo_card2[0])
-
-        under_b = range(1, self.column_range + 1)
-        under_i = range(self.column_range + 1, self.column_range * 2 + 1)
-        under_n = range(self.column_range * 2 + 1, self.column_range * 3 + 1)
-        under_g = range(self.column_range * 3 + 1, self.column_range * 4 + 1)
-        under_o = range(self.column_range * 4 + 1, self.column_range * self.card_length + 1)
-
-        under_all = range(1, self.column_range * self.card_length + 1)
-
-        random_b = random.sample(under_b, self.card_length)
-        random_i = random.sample(under_i, self.card_length)
-        random_n = random.sample(under_n, self.card_length)
-        random_g = random.sample(under_g, self.card_length)
-        random_o = random.sample(under_o, self.card_length)
-
-        # Create random bingo card:
-        for i in range(0, self.card_length):
-            for j in range(0, self.card_length):
-
-                if i == 0:
-                    bingo_card[j][0] = [random_b[j], False]
-                if i == 1:
-                    bingo_card[j][1] = [random_i[j], False]
-                if i == 2:
-                    bingo_card[j][2] = [random_n[j], False]
-                if i == 3:
-                    bingo_card[j][3] = [random_g[j], False]
-                if i == 4:
-                    bingo_card[j][4] = [random_o[j], False]
-
-        # TODO: is the middle cell FREE?
-        # bingo_card[2][2] = [0, True]
-
-        # print_bingo_card(bingo_card)
-        marked_bingo_card = copy.deepcopy(bingo_card)
+        game_card = bc.BingoCard()
 
         # Play bingo
-        random_all = random.sample(under_all, self.card_length * self.column_range)
+        random_all = bc.random.sample(game_card.under_all, bc.CARD_LENGTH * bc.COLUMN_RANGE)
         num_bingo_balls = 0
         got_bingo = False
 
@@ -194,18 +139,18 @@ class BingoSimulator:
 
             num_bingo_balls += 1
 
-            for i in range(0, self.card_length):
+            for i in range(0, bc.CARD_LENGTH):
 
                 if got_bingo:
                     break
 
-                for j in range(0, self.card_length):
-                    if bingo_card[i][j][False] == bingo_ball:
-                        bingo_card[i][j][True] = True
-                        marked_bingo_card[i][j][True] = 'X'
+                for j in range(0, bc.CARD_LENGTH):
+                    if game_card.bingo_card[i][j][False] == bingo_ball:
+                        game_card.bingo_card[i][j][True] = True
+                        game_card.marked_bingo_card[i][j][True] = 'X'
 
                     # Check for bingos
-                    if self.check_traditional_bingo(bingo_card):
+                    if self.check_traditional_bingo(game_card.bingo_card):
                         got_bingo = True
                         # print("BINGO in {} tries".format(num_bingo_balls))
                         self.num_bingo_tries[num_bingo_balls] += 1
@@ -241,7 +186,7 @@ class BingoSimulator:
         diag_bingo = 0
 
         for axis in [0, 1]:
-            for i in range(0, self.card_length):
+            for i in range(0, bc.CARD_LENGTH):
                 if axis == 0:
                     self.print_bingo_result(f"{axis_ref[axis]} {i}", self.num_line_bingo[axis][i])
                 else:
