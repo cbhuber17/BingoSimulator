@@ -1,4 +1,9 @@
 import bingo_card as bc
+import plotly.offline as pyo
+import plotly.graph_objs as go
+import pandas as pd
+import numpy as np
+from scipy.optimize import curve_fit
 
 
 class BingoStats:
@@ -130,10 +135,70 @@ class BingoSimulator:
     # ------------------------------------------------------------------------
 
 
-if __name__ == '__main__':
+# Function to model Gauss curve
+def gauss_curve(x, a, x0, sigma):
+    return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
 
+# ------------------------------------------------------------------------
+
+
+if __name__ == '__main__':
     bingo_game_sim = BingoSimulator(1000)
 
     bingo_game_sim.play_bingo(False)
 
     bingo_game_sim.stats.print_summary()
+
+    df = pd.DataFrame(bingo_game_sim.stats.num_bingo_tries, columns=["num_bingo_tries"])
+
+    # Get curve fit parameters in popt
+    popt, pcov = curve_fit(gauss_curve, df.index, df['num_bingo_tries'], p0=[1., 40., 20.])
+
+    # Generate curve
+    y_gauss_curve = gauss_curve(df.index, *popt)
+
+    print(y_gauss_curve)
+
+    data1 = go.Bar(
+        x=df.index,
+        y=df['num_bingo_tries'],
+        name="Frequency"
+    )
+
+    data2 = go.Scatter(
+        x=df.index,
+        y=y_gauss_curve,
+        name="Gauss Fit"
+    )
+
+    layout = go.Layout(
+        title={'text': 'Number of tries to win BINGO!',
+               'x': 0.5,
+               'y': 0.95,
+               'xanchor': 'center',
+               'yanchor': 'top'},
+        xaxis_title={'text': "Number of bingo balls"},
+        yaxis_title={'text': "Frequency"},
+        legend_title={'text': "Stats",},
+        font=dict(
+            family="Verdana",
+            size=20,
+            color="Black"
+        ),
+        paper_bgcolor='#F5F5F5',
+        plot_bgcolor='#D6D6D6',
+        spikedistance=1000,
+        hoverdistance=100,
+        hoverlabel=dict(
+            bgcolor="grey",
+            font_size=16,
+            font=dict(color="White",
+                      family="Verdana")
+
+        ))
+    fig = go.Figure(layout=layout)
+    fig.add_trace(data1)
+    fig.add_trace(data2)
+    fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
+    fig.add_annotation(x=2, y=20, text="Equation: ABD", showarrow=True, arrowhead=1)
+    pyo.plot(fig, filename='bingo_histo.html')
