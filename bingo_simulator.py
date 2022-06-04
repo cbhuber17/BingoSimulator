@@ -51,11 +51,11 @@ class BingoStats:
         bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
         axis_ref = {0: "Row", 1: "Column"}
 
-        print("\nSummary:\n")
-
         axis_bingo = [0, 0]  # Row, column
         line_bingo = 0
         diag_bingo = 0
+
+        print("\nSummary:\n")
 
         for axis in [0, 1]:
             for i in range(0, bc.CARD_LENGTH):

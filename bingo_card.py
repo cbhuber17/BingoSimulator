@@ -1,5 +1,4 @@
 import random
-import copy
 
 # Typical BINGO card layout
 CARD_LENGTH = 5  # 5x5 square card
@@ -35,8 +34,6 @@ class BingoCard:
         # Is the middle cell FREE?
         if free_cell:
             self.bingo_card[2][2] = [0, True]
-
-        # TODO: May need to remove marked card
 
     # ------------------------------------------------------------------------
 
