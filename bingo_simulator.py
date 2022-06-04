@@ -106,26 +106,9 @@ class BingoSimulator:
 
     # ------------------------------------------------------------------------
 
-    def print_bingo_card(self, card):
-
-        print('------------------------')
-        print('|B | |I | |N | |G | |O |')
-        print('------------------------')
-
-        for i in range(0, bc.CARD_LENGTH):
-
-            if i > 0:
-                print('\n------------------------')
-            for j in range(0, bc.CARD_LENGTH):
-                print('|{:2}|'.format(card[i][j][True]), end=" ")
-
-        print('\n------------------------\n\n')
-
-    # ------------------------------------------------------------------------
-
     def play_bingo(self):
 
-        game_card = bc.BingoCard()
+        game_card = bc.BingoCard(False)
 
         # Play bingo
         random_all = bc.random.sample(game_card.under_all, bc.CARD_LENGTH * bc.COLUMN_RANGE)
@@ -152,13 +135,10 @@ class BingoSimulator:
                     # Check for bingos
                     if self.check_traditional_bingo(game_card.bingo_card):
                         got_bingo = True
-                        # print("BINGO in {} tries".format(num_bingo_balls))
                         self.num_bingo_tries[num_bingo_balls] += 1
 
                         # print("Numbers called: {}".format(RandomAll[0:num_bingo_balls]))
                         break
-
-        # print_bingo_card(marked_bingo_card)
 
     # ------------------------------------------------------------------------
 
