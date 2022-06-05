@@ -1,6 +1,7 @@
 import bingo_card as bc
 import plot_bingo_histo as pbh
 
+
 class BingoStats:
 
     def __init__(self, num_simulations):

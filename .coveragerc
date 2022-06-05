@@ -1,0 +1,11 @@
+[paths]
+source =
+    ../bingo_simulator
+    */site-packages/bingo_simulator
+
+[run]
+source =
+    bingo_simulator
+omit =
+    */version.py
+    .tox/*
