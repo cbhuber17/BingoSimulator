@@ -1,10 +1,5 @@
 import bingo_card as bc
-import plotly.offline as pyo
-import plotly.graph_objs as go
-import pandas as pd
-import numpy as np
-from scipy.optimize import curve_fit
-
+import plot_bingo_histo as pbh
 
 class BingoStats:
 
@@ -135,84 +130,14 @@ class BingoSimulator:
     # ------------------------------------------------------------------------
 
 
-# Function to model Gauss curve
-def gauss_curve(x, a, x0, sigma):
-    return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
-
-# ------------------------------------------------------------------------
-
-
 if __name__ == '__main__':
-    bingo_game_sim = BingoSimulator(10000)
+
+    num_simulations = 1000
+
+    bingo_game_sim = BingoSimulator(num_simulations)
 
     bingo_game_sim.play_bingo(False)
 
     bingo_game_sim.stats.print_summary()
 
-    df = pd.DataFrame(bingo_game_sim.stats.num_bingo_tries, columns=["num_bingo_tries"])
-
-    # Preliminary stats and estimates
-    N = bingo_game_sim.stats.num_simulations
-    mean_estimate = 45.0
-    sigma_estimate = 10.0
-    p0 = [1., mean_estimate, sigma_estimate]
-
-    # Get curve fit parameters
-    curve_param, curve_covariance = curve_fit(gauss_curve, df.index, df['num_bingo_tries'], p0=p0)
-
-    # Generate curve
-    y_gauss_curve = gauss_curve(df.index, *curve_param)
-
-    x_annotation_point = int(mean_estimate - sigma_estimate)
-    y_annotation_point = y_gauss_curve[x_annotation_point]
-    x_stats_annotation_point = 20
-    y_stats_annotation_point = y_annotation_point
-
-    x_arrow_vector = -350
-    y_arrow_vector = -150
-
-    data1 = go.Bar(
-        x=df.index,
-        y=df['num_bingo_tries'],
-        name="Frequency"
-    )
-
-    data2 = go.Scatter(
-        x=df.index,
-        y=y_gauss_curve,
-        name="Gauss Fit",
-        texttemplate="Hello."
-    )
-
-    layout = go.Layout(
-        title={'text': 'Number of tries to win BINGO!',
-               'x': 0.5,
-               'y': 0.95,
-               'xanchor': 'center',
-               'yanchor': 'top'},
-        xaxis_title={'text': "Number of bingo balls"},
-        yaxis_title={'text': "Frequency"},
-        legend_title={'text': "Stats"},
-        font=dict(
-            family="Verdana",
-            size=20,
-            color="Black"
-        ),
-        paper_bgcolor='#F5F5F5',
-        plot_bgcolor='#D6D6D6',
-        spikedistance=1000,
-        hoverdistance=100,
-        hoverlabel=dict(
-            bgcolor="grey",
-            font_size=16,
-            font=dict(color="White",
-                      family="Verdana")
-
-        ))
-    fig = go.Figure(layout=layout)
-    fig.add_trace(data1)
-    fig.add_trace(data2)
-    fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
-    fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=r"$\Large{\frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$", showarrow=True, arrowhead=2, arrowsize=2, arrowwidth=2, arrowcolor="red", ax=x_arrow_vector, ay=y_arrow_vector, bordercolor="black", borderwidth=3, borderpad=35, bgcolor="White")
-    fig.add_annotation(x=x_stats_annotation_point, y=y_stats_annotation_point, text=r"$\mu={:.1f}, \sigma={:.1f}, N={}$".format(curve_param[1], curve_param[2], N), showarrow=False, bordercolor="black", borderpad=35, borderwidth=3, bgcolor="White")
-    pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
+    pbh.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
