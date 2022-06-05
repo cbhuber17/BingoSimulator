@@ -20,9 +20,10 @@ def plot_bingo_histo(num_bingo_tries):
 
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
+    peak_estimate = max(df['num_bingo_tries'])
     mean_estimate = 45.0  # 5x5 bingo card with 15 columns will have this approx mean
     sigma_estimate = 10.0  # Ditto
-    p0 = [1., mean_estimate, sigma_estimate]
+    p0 = [peak_estimate, mean_estimate, sigma_estimate]
 
     # Get curve fit parameters
     curve_param, curve_covariance = curve_fit(gauss_curve, df.index, df['num_bingo_tries'], p0=p0)
@@ -92,8 +93,12 @@ def plot_bingo_histo(num_bingo_tries):
     # Border of annotation properties
     bordercolor = "black"
     borderwidth = 3
-    borderpad = 1
+    borderpad = 40
     border_bgcolor = "white"
+
+    # TODO: Figure this out for LaTeX, this may be a plotly bug
+    box_width = 170
+    box_height = 100
 
     fig = go.Figure(layout=layout)
     fig.add_trace(data1)
