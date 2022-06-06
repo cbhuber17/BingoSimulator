@@ -8,7 +8,7 @@ VERSION_FILENAME = 'version.py'
 DESCRIPTION = '"Bingo Simulator that plots histograms of the results."'
 AUTHOR = 'Colin Huber'
 AUTHOR_EMAIL = 'cbhuber@gmail.com'
-INSTALL_REQUIRES = ['']
+INSTALL_REQUIRES = ['plotly', 'numpy', 'scipy', 'pandas']
 
 
 '''AUTOMATICALLY GENERATED. DO NOT MODIFY ANYTHING BELOW THIS UNLESS YOU KNOW WHAT YOU ARE DOING'''

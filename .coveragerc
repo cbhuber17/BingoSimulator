@@ -1,7 +1,6 @@
 [paths]
 source =
     ../bingo_simulator
-    */site-packages/bingo_simulator
 
 [run]
 source =

@@ -1,5 +1,4 @@
-import bingo_card as bc
-import plot_bingo_histo as pbh
+from bingo_simulator import bingo_card as bc
 
 
 class BingoStats:
@@ -131,14 +130,15 @@ class BingoSimulator:
     # ------------------------------------------------------------------------
 
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
+    from bingo_simulator import plot_bingo_histo as pbh
 
-num_simulations = 1000
+    num_simulations = 1000
 
-bingo_game_sim = BingoSimulator(num_simulations)
+    bingo_game_sim = BingoSimulator(num_simulations)
 
-bingo_game_sim.play_bingo(False)
+    bingo_game_sim.play_bingo(False)
 
-bingo_game_sim.stats.print_summary()
+    bingo_game_sim.stats.print_summary()
 
-pbh.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
+    pbh.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
