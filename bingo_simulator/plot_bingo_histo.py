@@ -73,7 +73,6 @@ def plot_bingo_histo(num_bingo_tries):
         spikedistance=1000,
         hoverdistance=100,
         hoverlabel=dict(
-            bgcolor="grey",
             font_size=16,
             font=dict(color="White",
                       family="Verdana")
