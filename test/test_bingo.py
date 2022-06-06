@@ -37,10 +37,15 @@ def get_valid_diagonal2():
 # -------------------------------------------------------------------------------------------------------------
 # Begin tests
 
-def test_diagonal_one_1():
+def test_valid_diagonal_one():
     card, stats = get_valid_diagonal1()
     assert card._check_diagonal_bingo(1, stats) and stats.num_diag_bingo[0] == 1
 
+# -------------------------------------------------------------------------------------------------------------
+
+def test_valid_diagonal_two():
+    card, stats = get_valid_diagonal2()
+    assert card._check_diagonal_bingo(2, stats) and stats.num_diag_bingo[1] == 1
 
 # -------------------------------------------------------------------------------------------------------------
 
