@@ -262,7 +262,7 @@ def test_invalid_corner4():
 
 def test_valid_traditional_bingo1():
     card, stats = get_valid_diagonal1()
-    assert card.check_traditional_bingo(stats) and stats.num_diag_bingo[0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.num_diag_bingo[0] == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ def test_valid_traditional_bingo1():
 
 def test_valid_traditional_bingo2():
     card, stats = get_valid_diagonal2()
-    assert card.check_traditional_bingo(stats) and stats.num_diag_bingo[1] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.num_diag_bingo[1] == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -278,14 +278,14 @@ def test_valid_traditional_bingo2():
 
 def test_valid_traditional_bingo3():
     card, stats = get_valid_row(0)
-    assert card.check_traditional_bingo(stats) and stats.num_line_bingo[0][0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.num_line_bingo[0][0] == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
 
 def test_valid_traditional_bingo4():
     card, stats = get_valid_col(0)
-    assert card.check_traditional_bingo(stats) and stats.num_line_bingo[1][0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.num_line_bingo[1][0] == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -293,7 +293,7 @@ def test_valid_traditional_bingo4():
 
 def test_valid_traditional_bingo5():
     card, stats = get_valid_corners()
-    assert card.check_traditional_bingo(stats) and stats.num_corners_bingo == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.num_corners_bingo == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -315,7 +315,7 @@ def test_invalid_traditional_bingo():
     card.bingo_card[4][1][True] = True
     card.bingo_card[4][3][True] = True
 
-    assert not card.check_traditional_bingo(stats) and \
+    assert not card.check_traditional_bingo(stats, 0) and \
            stats.num_diag_bingo[0] == 0 and \
            stats.num_diag_bingo[1] == 0 and \
            stats.num_line_bingo[0][0] == 0 and \
