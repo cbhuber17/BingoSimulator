@@ -109,17 +109,24 @@ class BingoCard:
 
     # ------------------------------------------------------------------------
 
-    def check_traditional_bingo(self, stats):
+    def check_traditional_bingo(self, stats, num_bingo_balls):
 
         if self._check_corners_bingo(stats):
+            stats.num_tries_corners[num_bingo_balls] += 1
             return True
 
         for i in range(0, CARD_LENGTH):
 
             if i in [1, 2] and self._check_diagonal_bingo(i, stats):
+                stats.num_tries_diag[i-1][num_bingo_balls] += 1
                 return True
 
-            if self._check_line_bingo(0, i, stats) or self._check_line_bingo(1, i, stats):
+            if self._check_line_bingo(0, i, stats):
+                stats.num_tries_row[i][num_bingo_balls] += 1
+                return True
+
+            if self._check_line_bingo(1, i, stats):
+                stats.num_tries_col[i][num_bingo_balls] += 1
                 return True
 
         return False

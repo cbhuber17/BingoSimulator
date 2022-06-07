@@ -18,10 +18,19 @@ class BingoStats:
         # All 4 corners bingo
         self.num_corners_bingo = 0
 
+        # TODO: Pie chart for above stats
+
         # Tries to get bingo, histogram
         self.num_bingo_tries = []
 
-        # TODO: num tries row0-4 bingo, col0-4 bingo, diag, corners, etc.
+        # TODO: Stacked bar chart
+        self.num_tries_row = [[], [], [], [], []]
+
+        self.num_tries_col = [[], [], [], [], []]
+
+        self.num_tries_diag = [[], []]
+
+        self.num_tries_corners = []
 
         # Init histogram
         for i in range(0, bc.CARD_LENGTH * bc.COLUMN_RANGE + 1):
@@ -31,6 +40,15 @@ class BingoStats:
                 self.num_line_bingo[1].append(0)  # Columns
 
             self.num_bingo_tries.append(0)
+            self.num_tries_corners.append(0)
+
+            for j in range(0, bc.CARD_LENGTH):
+
+                if j in [0, 1]:
+                    self.num_tries_diag[j].append(0)
+
+                self.num_tries_row[j].append(0)
+                self.num_tries_col[j].append(0)
 
     # ------------------------------------------------------------------------
 
@@ -79,7 +97,14 @@ class BingoStats:
 
         self._print_bingo_result("Corners", self.num_corners_bingo)
 
-        print(self.num_bingo_tries)
+        print("Num total tries:", self.num_bingo_tries)
+        print("Num corner tries:", self.num_tries_corners)
+
+        for i in range(0, bc.CARD_LENGTH):
+            if i in [0, 1]:
+                print(f"Num diag {i + 1} tries: ", self.num_tries_diag[i])
+            print(f"Num row {i} tries: ", self.num_tries_row[i])
+            print(f"Num col {i} tries: ", self.num_tries_col[i])
 
     # ------------------------------------------------------------------------
 
@@ -120,7 +145,7 @@ class BingoSimulator:
                             game_card.bingo_card[i][j][True] = True
 
                         # Check for bingos
-                        if game_card.check_traditional_bingo(self.stats):
+                        if game_card.check_traditional_bingo(self.stats, num_bingo_balls):
                             got_bingo = True
                             self.stats.num_bingo_tries[num_bingo_balls] += 1
 
