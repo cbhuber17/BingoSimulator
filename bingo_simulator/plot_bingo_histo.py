@@ -33,15 +33,6 @@ def plot_bingo_histo(num_bingo_tries):
     # Generate curve model
     y_gauss_curve = gauss_curve(df.index, *curve_param)
 
-    # Annotation variables
-    x_annotation_point = int(mean_estimate - sigma_estimate)
-    y_annotation_point = y_gauss_curve[x_annotation_point]
-    x_stats_annotation_point = 20
-    y_stats_annotation_point = y_annotation_point
-
-    x_arrow_vector = -350
-    y_arrow_vector = -150
-
     data1 = go.Bar(
         x=df.index,
         y=df['num_bingo_tries'],
@@ -55,7 +46,7 @@ def plot_bingo_histo(num_bingo_tries):
     )
 
     layout = go.Layout(
-        title={'text': 'Number of tries to win BINGO!',
+        title={'text': 'Number of bingo balls to win BINGO!',
                'x': 0.5,
                'y': 0.95,
                'xanchor': 'center',
@@ -92,8 +83,17 @@ def plot_bingo_histo(num_bingo_tries):
     # Border of annotation properties
     bordercolor = "black"
     borderwidth = 3
-    borderpad = 40
+    borderpad = 50
     border_bgcolor = "white"
+
+    # Annotation variables
+    x_annotation_point = int(mean_estimate - sigma_estimate)
+    y_annotation_point = y_gauss_curve[x_annotation_point]
+    x_stats_annotation_point = 17
+    y_stats_annotation_point = y_annotation_point
+
+    x_arrow_vector = -350
+    y_arrow_vector = -150
 
     # TODO: Figure this out for LaTeX, this may be a plotly bug
     box_width = 170
