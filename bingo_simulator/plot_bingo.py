@@ -5,17 +5,18 @@ import numpy as np
 from scipy.optimize import curve_fit
 from bingo_card import CARD_LENGTH
 
+
 # ------------------------------------------------------------------------
 
 # Function to model Gauss curve
 def gauss_curve(x, a, x0, sigma):
     return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
 
+
 # ------------------------------------------------------------------------
 
 
 def plot_bingo_histo(num_bingo_tries):
-
     df = pd.DataFrame(num_bingo_tries, columns=["num_bingo_tries"])
 
     # Preliminary stats and estimates
@@ -119,8 +120,6 @@ def plot_bingo_histo(num_bingo_tries):
 
 
 def plot_bingo_pie(stats):
-
-
     labels = []
     values = []
 
@@ -133,12 +132,33 @@ def plot_bingo_pie(stats):
         values.append(stats.num_line_bingo[1][i])
 
     for i in range(0, 2):
-        labels.append(f"Diagonal {i+1}")
+        labels.append(f"Diagonal {i + 1}")
         values.append(stats.num_diag_bingo[i])
 
     labels.append("Corners")
     values.append(stats.num_corners_bingo)
 
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    layout = go.Layout(
+        title={'text': 'Detailed type of bingo win',
+               'x': 0.5,
+               'y': 0.95,
+               'xanchor': 'center',
+               'yanchor': 'top'},
+        legend_title={'text': "Stats"},
+        font=dict(
+            family="Verdana",
+            size=16,
+            color="Black"
+        ),
+        hoverlabel=dict(
+            font_size=16,
+            font=dict(color="White",
+                      family="Verdana")
+        ))
+
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
+                    insidetextorientation='radial')], layout=layout)
+    fig.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20, textposition="outside",
+                      marker=dict(line=dict(color='#000000', width=2)))
 
     pyo.plot(fig, filename='bingo_pie.html')
