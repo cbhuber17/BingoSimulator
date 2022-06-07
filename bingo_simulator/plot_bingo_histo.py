@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
-
+from bingo_card import CARD_LENGTH
 
 # ------------------------------------------------------------------------
 
@@ -116,3 +116,29 @@ def plot_bingo_histo(num_bingo_tries):
                        align="left", valign="top")
 
     pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
+
+
+def plot_bingo_pie(stats):
+
+
+    labels = []
+    values = []
+
+    for i in range(0, CARD_LENGTH):
+        labels.append(f"Row {i}")
+        values.append(stats.num_line_bingo[0][i])
+
+    for i in range(0, CARD_LENGTH):
+        labels.append(f"Column {i}")
+        values.append(stats.num_line_bingo[1][i])
+
+    for i in range(0, 2):
+        labels.append(f"Diagonal {i+1}")
+        values.append(stats.num_diag_bingo[i])
+
+    labels.append("Corners")
+    values.append(stats.num_corners_bingo)
+
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+
+    pyo.plot(fig, filename='bingo_pie.html')

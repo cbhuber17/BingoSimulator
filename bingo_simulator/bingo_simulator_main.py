@@ -167,3 +167,5 @@ if __name__ == '__main__':
     bingo_game_sim.stats.print_summary()
 
     pbh.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
+
+    pbh.plot_bingo_pie(bingo_game_sim.stats)
