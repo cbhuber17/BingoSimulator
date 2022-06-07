@@ -156,7 +156,7 @@ class BingoSimulator:
 
 
 if __name__ == '__main__':
-    from bingo_simulator import plot_bingo_histo as pbh
+    from bingo_simulator import plot_bingo as pb
 
     num_simulations = 1000
 
@@ -166,6 +166,6 @@ if __name__ == '__main__':
 
     bingo_game_sim.stats.print_summary()
 
-    pbh.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
+    pb.plot_bingo_histo(bingo_game_sim.stats.num_bingo_tries)
 
-    pbh.plot_bingo_pie(bingo_game_sim.stats)
+    pb.plot_bingo_pie(bingo_game_sim.stats)
