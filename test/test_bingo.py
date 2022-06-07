@@ -255,3 +255,77 @@ def test_invalid_corner4():
     card, stats = get_valid_corners()
     card.bingo_card[CARD_LENGTH - 1][CARD_LENGTH - 1][True] = False
     assert not card._check_corners_bingo(stats) and stats.num_corners_bingo == 0
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+
+def test_valid_traditional_bingo1():
+    card, stats = get_valid_diagonal1()
+    assert card.check_traditional_bingo(stats) and stats.num_diag_bingo[0] == 1
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+
+def test_valid_traditional_bingo2():
+    card, stats = get_valid_diagonal2()
+    assert card.check_traditional_bingo(stats) and stats.num_diag_bingo[1] == 1
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+
+def test_valid_traditional_bingo3():
+    card, stats = get_valid_row(0)
+    assert card.check_traditional_bingo(stats) and stats.num_line_bingo[0][0] == 1
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+def test_valid_traditional_bingo4():
+    card, stats = get_valid_col(0)
+    assert card.check_traditional_bingo(stats) and stats.num_line_bingo[1][0] == 1
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+
+def test_valid_traditional_bingo5():
+    card, stats = get_valid_corners()
+    assert card.check_traditional_bingo(stats) and stats.num_corners_bingo == 1
+
+
+# -------------------------------------------------------------------------------------------------------------
+
+def test_invalid_traditional_bingo():
+    card, stats = get_card_and_stats()
+
+    # Mark every other cell, this should not be a valid bingo
+    card.bingo_card[0][1][True] = True
+    card.bingo_card[0][3][True] = True
+    card.bingo_card[1][0][True] = True
+    card.bingo_card[1][2][True] = True
+    card.bingo_card[1][4][True] = True
+    card.bingo_card[2][1][True] = True
+    card.bingo_card[2][3][True] = True
+    card.bingo_card[3][0][True] = True
+    card.bingo_card[3][2][True] = True
+    card.bingo_card[3][4][True] = True
+    card.bingo_card[4][1][True] = True
+    card.bingo_card[4][3][True] = True
+
+    assert not card.check_traditional_bingo(stats) and \
+           stats.num_diag_bingo[0] == 0 and \
+           stats.num_diag_bingo[1] == 0 and \
+           stats.num_line_bingo[0][0] == 0 and \
+           stats.num_line_bingo[0][1] == 0 and \
+           stats.num_line_bingo[0][2] == 0 and \
+           stats.num_line_bingo[0][3] == 0 and \
+           stats.num_line_bingo[0][4] == 0 and \
+           stats.num_line_bingo[1][0] == 0 and \
+           stats.num_line_bingo[1][1] == 0 and \
+           stats.num_line_bingo[1][2] == 0 and \
+           stats.num_line_bingo[1][3] == 0 and \
+           stats.num_line_bingo[1][4] == 0 and \
+           stats.num_corners_bingo == 0
