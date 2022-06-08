@@ -38,13 +38,15 @@ def plot_bingo_histo(num_bingo_tries):
     data1 = go.Bar(
         x=df.index,
         y=df['num_bingo_tries'],
-        name="Frequency"
+        name="Frequency",
+        marker_line=dict(width=1, color='black')
     )
 
     data2 = go.Scatter(
         x=df.index,
         y=y_gauss_curve,
         name="Gauss Fit",
+        line=dict(width=4)
     )
 
     layout = go.Layout(
