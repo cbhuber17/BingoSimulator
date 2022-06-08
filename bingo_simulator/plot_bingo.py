@@ -1,5 +1,6 @@
 import plotly.offline as pyo
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
@@ -120,45 +121,67 @@ def plot_bingo_histo(num_bingo_tries):
 
 
 def plot_bingo_pie(stats):
-    labels = []
-    values = []
+    labels1 = []
+    values1 = []
 
     for i in range(0, CARD_LENGTH):
-        labels.append(f"Row {i}")
-        values.append(stats.num_line_bingo[0][i])
+        labels1.append(f"Column {i}")
+        values1.append(stats.num_line_bingo[1][i])
 
-    for i in range(0, CARD_LENGTH):
-        labels.append(f"Column {i}")
-        values.append(stats.num_line_bingo[1][i])
+    labels1.append("Corners")
+    values1.append(stats.num_corners_bingo)
 
     for i in range(0, 2):
-        labels.append(f"Diagonal {i + 1}")
-        values.append(stats.num_diag_bingo[i])
+        labels1.append(f"Diagonal {i + 1}")
+        values1.append(stats.num_diag_bingo[i])
 
-    labels.append("Corners")
-    values.append(stats.num_corners_bingo)
+    for i in range(0, CARD_LENGTH):
+        labels1.append(f"Row {i}")
+        values1.append(stats.num_line_bingo[0][i])
 
-    layout = go.Layout(
-        title={'text': 'Detailed type of bingo win',
-               'x': 0.5,
-               'y': 0.95,
-               'xanchor': 'center',
-               'yanchor': 'top'},
-        legend_title={'text': "Stats"},
-        font=dict(
-            family="Verdana",
-            size=16,
-            color="Black"
-        ),
-        hoverlabel=dict(
-            font_size=16,
-            font=dict(color="White",
-                      family="Verdana")
-        ))
+    labels2 = []
+    values2 = []
 
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',
-                    insidetextorientation='radial')], layout=layout)
-    fig.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20, textposition="outside",
+    labels2.append("Columns")
+    values2.append(sum(stats.num_line_bingo[1]))
+
+    labels2.append("Corners")
+    values2.append(stats.num_corners_bingo)
+
+    labels2.append("Diagonals")
+    values2.append(sum(stats.num_diag_bingo))
+
+    labels2.append("Rows")
+    values2.append(sum(stats.num_line_bingo[0]))
+
+    print(labels1, values1)
+
+    fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
+
+    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown"), 1, 1)
+    fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown"), 1, 2)
+
+    fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
+                      textposition="auto", hole=.4, direction='clockwise', sort=False,
                       marker=dict(line=dict(color='#000000', width=2)))
+
+    fig.update_layout(title={'text': f'Detailed type of bingo win!<br><sup>Number of samples: <i>N={stats.num_simulations}</i></sup>',
+                             'x': 0.5,
+                             'y': 0.95,
+                             'xanchor': 'center',
+                             'yanchor': 'top'}, paper_bgcolor="grey",
+                      font=dict(
+                          family="Verdana",
+                          size=20,
+                          color="Black"
+                      ),
+                      legend=dict(
+                          traceorder="grouped"
+                      ),
+                      hoverlabel=dict(
+                          font_size=20,
+                          font=dict(color="White",
+                                    family="Verdana")
+                      ))
 
     pyo.plot(fig, filename='bingo_pie.html')
