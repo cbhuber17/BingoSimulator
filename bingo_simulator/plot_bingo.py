@@ -48,11 +48,12 @@ def plot_bingo_histo(num_bingo_tries):
     )
 
     layout = go.Layout(
-        title={'text': 'Number of bingo balls to win BINGO!',
-               'x': 0.5,
-               'y': 0.95,
-               'xanchor': 'center',
-               'yanchor': 'top'},
+        title={
+            'text': 'Number of bingo balls to win BINGO!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(num_simulations),
+            'x': 0.5,
+            'y': 0.95,
+            'xanchor': 'center',
+            'yanchor': 'top'},
         xaxis_title={'text': "Number of bingo balls"},
         yaxis_title={'text': "Frequency"},
         legend_title={'text': "Stats"},
@@ -74,8 +75,8 @@ def plot_bingo_histo(num_bingo_tries):
 
     # LaTeX format to show the model equation and stat values
     model_equation = r"$\Large{\frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
-    model_results = r"$a={:.1f}, \mu={:.1f}, \sigma={:.1f}, N={}$".format(curve_a, curve_mean, curve_std,
-                                                                          num_simulations)
+    model_results = r"$a={:.1f}, \mu={:.1f}, \sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
+
     # Arrow properties
     arrowhead = 2
     arrowsize = 2
@@ -85,7 +86,7 @@ def plot_bingo_histo(num_bingo_tries):
     # Border of annotation properties
     bordercolor = "black"
     borderwidth = 3
-    borderpad = 50
+    borderpad = 35
     border_bgcolor = "white"
 
     # Annotation variables
@@ -121,11 +122,13 @@ def plot_bingo_histo(num_bingo_tries):
 
 
 def plot_bingo_pie(stats):
+    bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
+
     labels1 = []
     values1 = []
 
     for i in range(0, CARD_LENGTH):
-        labels1.append(f"Column {i}")
+        labels1.append(f"Column {bingo_ref[i]}")
         values1.append(stats.num_line_bingo[1][i])
 
     labels1.append("Corners")
@@ -154,7 +157,11 @@ def plot_bingo_pie(stats):
     labels2.append("Rows")
     values2.append(sum(stats.num_line_bingo[0]))
 
-    print(labels1, values1)
+    # Border of annotation properties
+    bordercolor = "black"
+    borderwidth = 3
+    borderpad = 5
+    border_bgcolor = "white"
 
     fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
 
@@ -163,25 +170,29 @@ def plot_bingo_pie(stats):
 
     fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
                       textposition="auto", hole=.4, direction='clockwise', sort=False,
-                      marker=dict(line=dict(color='#000000', width=2)))
+                      marker=dict(line=dict(color='#000000', width=5)))
 
-    fig.update_layout(title={'text': f'Detailed type of bingo win!<br><sup>Number of samples: <i>N={stats.num_simulations}</i></sup>',
-                             'x': 0.5,
-                             'y': 0.95,
-                             'xanchor': 'center',
-                             'yanchor': 'top'}, paper_bgcolor="grey",
-                      font=dict(
-                          family="Verdana",
-                          size=20,
-                          color="Black"
-                      ),
-                      legend=dict(
-                          traceorder="grouped"
-                      ),
-                      hoverlabel=dict(
-                          font_size=20,
-                          font=dict(color="White",
-                                    family="Verdana")
-                      ))
+    fig.update_layout(
+        title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(stats.num_simulations),
+               'x': 0.5,
+               'y': 0.95,
+               'xanchor': 'center',
+               'yanchor': 'top'}, paper_bgcolor="grey",
+        font=dict(
+            family="Verdana",
+            size=20,
+            color="white"
+        ),
+        showlegend=False,
+        hoverlabel=dict(
+            font_size=20,
+            bordercolor="black",
+            font=dict(color="White",
+                      family="Verdana")
+        ),
+        annotations=[dict(text='Detailed Breakdown', x=0.165, y=0.5, font_size=20, font_color="black", showarrow=False, borderwidth=borderwidth,
+                       borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor),
+                     dict(text='High Level Breakdown', x=0.845, y=0.5, font_size=20, font_color="black", showarrow=False, borderwidth=borderwidth,
+                       borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
 
     pyo.plot(fig, filename='bingo_pie.html')
