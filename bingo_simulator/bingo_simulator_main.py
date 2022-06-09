@@ -1,5 +1,7 @@
 from bingo_simulator import bingo_card as bc
+import pandas as pd
 
+STATS_FILENAME = "bingo_stats.csv"
 
 class BingoStats:
 
@@ -155,6 +157,39 @@ class BingoSimulator:
     # ------------------------------------------------------------------------
 
 
+def get_stats_to_df(stats):
+
+    df = pd.DataFrame({"num_bingo_tries": bingo_game_sim.stats.num_bingo_tries,
+                       "num_tries_row0": bingo_game_sim.stats.num_tries_row[0],
+                       "num_tries_row1": bingo_game_sim.stats.num_tries_row[1],
+                       "num_tries_row2": bingo_game_sim.stats.num_tries_row[2],
+                       "num_tries_row3": bingo_game_sim.stats.num_tries_row[3],
+                       "num_tries_row4": bingo_game_sim.stats.num_tries_row[4],
+                       "num_tries_col0": bingo_game_sim.stats.num_tries_col[0],
+                       "num_tries_col1": bingo_game_sim.stats.num_tries_col[1],
+                       "num_tries_col2": bingo_game_sim.stats.num_tries_col[2],
+                       "num_tries_col3": bingo_game_sim.stats.num_tries_col[3],
+                       "num_tries_col4": bingo_game_sim.stats.num_tries_col[4],
+                       "num_tries_diag1": bingo_game_sim.stats.num_tries_diag[0],
+                       "num_tries_diag2": bingo_game_sim.stats.num_tries_diag[1],
+                       "num_tries_corners": bingo_game_sim.stats.num_tries_corners,
+                       "num_tries_rows": [a + b + c + d + e for a, b, c, d, e in
+                                          zip(bingo_game_sim.stats.num_tries_row[0],
+                                              bingo_game_sim.stats.num_tries_row[1],
+                                              bingo_game_sim.stats.num_tries_row[2],
+                                              bingo_game_sim.stats.num_tries_row[3],
+                                              bingo_game_sim.stats.num_tries_row[4])],
+                       "num_tries_cols": [a + b + c + d + e for a, b, c, d, e in
+                                          zip(bingo_game_sim.stats.num_tries_col[0],
+                                              bingo_game_sim.stats.num_tries_col[1],
+                                              bingo_game_sim.stats.num_tries_col[2],
+                                              bingo_game_sim.stats.num_tries_col[3],
+                                              bingo_game_sim.stats.num_tries_col[4])],
+                       "num_tries_diag": [a + b for a, b in zip(bingo_game_sim.stats.num_tries_diag[0],
+                                                                bingo_game_sim.stats.num_tries_diag[1])]})
+    return df
+
+
 if __name__ == '__main__':
     from bingo_simulator import plot_bingo as pb
 
@@ -166,6 +201,10 @@ if __name__ == '__main__':
 
     bingo_game_sim.stats.print_summary()
 
-    pb.plot_bingo_histo(bingo_game_sim.stats)
+    df = get_stats_to_df(bingo_game_sim.stats)
+
+    df.to_csv(STATS_FILENAME)
+
+    pb.plot_bingo_histo(df)
 
     pb.plot_bingo_pie(bingo_game_sim.stats)

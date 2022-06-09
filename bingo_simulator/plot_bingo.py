@@ -17,27 +17,7 @@ def gauss_curve(x, a, x0, sigma):
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(stats):
-    total_tries_rows = stats.num_tries_row[0] + stats.num_tries_row[1] + stats.num_tries_row[2] + stats.num_tries_row[
-        3] + stats.num_tries_row[4]
-    print(total_tries_rows)
-    print(len(total_tries_rows))
-
-    df = pd.DataFrame({"num_bingo_tries": stats.num_bingo_tries, "num_tries_row0": stats.num_tries_row[0],
-                       "num_tries_row1": stats.num_tries_row[1], "num_tries_row2": stats.num_tries_row[2],
-                       "num_tries_row3": stats.num_tries_row[3], "num_tries_row4": stats.num_tries_row[4],
-                       "num_tries_col0": stats.num_tries_col[0], "num_tries_col1": stats.num_tries_col[1],
-                       "num_tries_col2": stats.num_tries_col[2], "num_tries_col3": stats.num_tries_col[3],
-                       "num_tries_col4": stats.num_tries_col[4], "num_tries_diag1": stats.num_tries_diag[0],
-                       "num_tries_diag2": stats.num_tries_diag[1], "num_tries_corners": stats.num_tries_corners,
-                       "num_tries_rows": [a + b + c + d + e for a, b, c, d, e in
-                                          zip(stats.num_tries_row[0], stats.num_tries_row[1], stats.num_tries_row[2],
-                                              stats.num_tries_row[3], stats.num_tries_row[4])],
-                       "num_tries_cols": [a + b + c + d + e for a, b, c, d, e in
-                                          zip(stats.num_tries_col[0], stats.num_tries_col[1], stats.num_tries_col[2],
-                                              stats.num_tries_col[3], stats.num_tries_col[4])],
-                       "num_tries_diag": [a + b for a, b in zip(stats.num_tries_diag[0], stats.num_tries_diag[1])]})
-
+def plot_bingo_histo(df):
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
     peak_estimate = max(df['num_bingo_tries'])
@@ -304,10 +284,10 @@ def plot_bingo_pie(stats):
     fig.update_layout(
         title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(
             stats.num_simulations),
-               'x': 0.5,
-               'y': 0.95,
-               'xanchor': 'center',
-               'yanchor': 'top'}, paper_bgcolor="grey",
+            'x': 0.5,
+            'y': 0.95,
+            'xanchor': 'center',
+            'yanchor': 'top'}, paper_bgcolor="grey",
         font=dict(
             family="MV Boli",
             size=40,
