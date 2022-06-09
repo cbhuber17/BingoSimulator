@@ -17,8 +17,26 @@ def gauss_curve(x, a, x0, sigma):
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(num_bingo_tries):
-    df = pd.DataFrame(num_bingo_tries, columns=["num_bingo_tries"])
+def plot_bingo_histo(stats):
+    total_tries_rows = stats.num_tries_row[0] + stats.num_tries_row[1] + stats.num_tries_row[2] + stats.num_tries_row[
+        3] + stats.num_tries_row[4]
+    print(total_tries_rows)
+    print(len(total_tries_rows))
+
+    df = pd.DataFrame({"num_bingo_tries": stats.num_bingo_tries, "num_tries_row0": stats.num_tries_row[0],
+                       "num_tries_row1": stats.num_tries_row[1], "num_tries_row2": stats.num_tries_row[2],
+                       "num_tries_row3": stats.num_tries_row[3], "num_tries_row4": stats.num_tries_row[4],
+                       "num_tries_col0": stats.num_tries_col[0], "num_tries_col1": stats.num_tries_col[1],
+                       "num_tries_col2": stats.num_tries_col[2], "num_tries_col3": stats.num_tries_col[3],
+                       "num_tries_col4": stats.num_tries_col[4], "num_tries_diag1": stats.num_tries_diag[0],
+                       "num_tries_diag2": stats.num_tries_diag[1], "num_tries_corners": stats.num_tries_corners,
+                       "num_tries_rows": [a + b + c + d + e for a, b, c, d, e in
+                                          zip(stats.num_tries_row[0], stats.num_tries_row[1], stats.num_tries_row[2],
+                                              stats.num_tries_row[3], stats.num_tries_row[4])],
+                       "num_tries_cols": [a + b + c + d + e for a, b, c, d, e in
+                                          zip(stats.num_tries_col[0], stats.num_tries_col[1], stats.num_tries_col[2],
+                                              stats.num_tries_col[3], stats.num_tries_col[4])],
+                       "num_tries_diag": [a + b for a, b in zip(stats.num_tries_diag[0], stats.num_tries_diag[1])]})
 
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
@@ -42,6 +60,109 @@ def plot_bingo_histo(num_bingo_tries):
         marker_line=dict(width=1, color='black')
     )
 
+    data1a = go.Bar(
+        x=df.index,
+        y=df['num_tries_rows'],
+        name="Rows",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1aa = go.Bar(
+        x=df.index,
+        y=df['num_tries_row0'],
+        name="Row 1",
+        marker_line=dict(width=1, color='black')
+    )
+    data1ab = go.Bar(
+        x=df.index,
+        y=df['num_tries_row1'],
+        name="Row 2",
+        marker_line=dict(width=1, color='black')
+    )
+    data1ac = go.Bar(
+        x=df.index,
+        y=df['num_tries_row2'],
+        name="Row 3",
+        marker_line=dict(width=1, color='black')
+    )
+    data1ad = go.Bar(
+        x=df.index,
+        y=df['num_tries_row3'],
+        name="Row 4",
+        marker_line=dict(width=1, color='black')
+    )
+    data1ae = go.Bar(
+        x=df.index,
+        y=df['num_tries_row4'],
+        name="Row 5",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1b = go.Bar(
+        x=df.index,
+        y=df['num_tries_cols'],
+        name="Columns",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1ba = go.Bar(
+        x=df.index,
+        y=df['num_tries_col0'],
+        name="Column B",
+        marker_line=dict(width=1, color='black')
+    )
+    data1bb = go.Bar(
+        x=df.index,
+        y=df['num_tries_col1'],
+        name="Column I",
+        marker_line=dict(width=1, color='black')
+    )
+    data1bc = go.Bar(
+        x=df.index,
+        y=df['num_tries_col2'],
+        name="Column N",
+        marker_line=dict(width=1, color='black')
+    )
+    data1bd = go.Bar(
+        x=df.index,
+        y=df['num_tries_col3'],
+        name="Column G",
+        marker_line=dict(width=1, color='black')
+    )
+    data1be = go.Bar(
+        x=df.index,
+        y=df['num_tries_col4'],
+        name="Column O",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1c = go.Bar(
+        x=df.index,
+        y=df['num_tries_diag'],
+        name="Diagonals",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1ca = go.Bar(
+        x=df.index,
+        y=df['num_tries_diag2'],
+        name="Diagonal 2",
+        marker_line=dict(width=1, color='black')
+    )
+    data1cb = go.Bar(
+        x=df.index,
+        y=df['num_tries_diag1'],
+        name="Diagonal 1",
+        marker_line=dict(width=1, color='black')
+    )
+
+    data1d = go.Bar(
+        x=df.index,
+        y=df['num_tries_corners'],
+        name="Corners",
+        marker_line=dict(width=1, color='black')
+    )
+
     data2 = go.Scatter(
         x=df.index,
         y=y_gauss_curve,
@@ -51,12 +172,14 @@ def plot_bingo_histo(num_bingo_tries):
 
     layout = go.Layout(
         title={
-            'text': 'Number of bingo balls to win BINGO!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(num_simulations),
+            'text': 'Number of bingo balls to win BINGO!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(
+                num_simulations),
             'x': 0.5,
             'y': 0.95,
             'xanchor': 'center',
             'yanchor': 'top',
         },
+        barmode="stack",
         xaxis_title={'text': "Number of bingo balls"},
         yaxis_title={'text': "Frequency"},
         legend_title={'text': "Stats"},
@@ -105,8 +228,9 @@ def plot_bingo_histo(num_bingo_tries):
     box_width = 170
     box_height = 100
 
-    fig = go.Figure(layout=layout)
-    fig.add_trace(data1)
+    fig = go.Figure(data=[data1d, data1cb, data1ca, data1be, data1bd, data1bc, data1bb, data1ba, data1ae, data1ad,
+                          data1ac, data1ab, data1aa], layout=layout)
+    # fig.add_trace(data1)
     fig.add_trace(data2)
     fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
 
@@ -142,7 +266,7 @@ def plot_bingo_pie(stats):
         values1.append(stats.num_diag_bingo[i])
 
     for i in range(0, CARD_LENGTH):
-        labels1.append(f"<b>Row {i}</b>")
+        labels1.append(f"<b>Row {i + 1}</b>")
         values1.append(stats.num_line_bingo[0][i])
 
     labels2 = []
@@ -168,15 +292,18 @@ def plot_bingo_pie(stats):
 
     fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
 
-    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown", textfont=dict(family="Century Gothic")), 1, 1)
-    fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown", textfont=dict(family="Century Gothic")), 1, 2)
+    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown",
+                         textfont=dict(family="Century Gothic")), 1, 1)
+    fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
+                         textfont=dict(family="Century Gothic")), 1, 2)
 
     fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
                       textposition="auto", hole=.4, direction='clockwise', sort=False,
                       marker=dict(line=dict(color='#000000', width=5)))
 
     fig.update_layout(
-        title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(stats.num_simulations),
+        title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(
+            stats.num_simulations),
                'x': 0.5,
                'y': 0.95,
                'xanchor': 'center',
@@ -192,9 +319,11 @@ def plot_bingo_pie(stats):
             bordercolor="black",
             font=dict(color="White")
         ),
-        annotations=[dict(text='<b>Detailed Breakdown</b>', x=0.165, y=0.5, font_size=20, font_color="black", font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
-                       borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor),
-                     dict(text='<b>High Level Breakdown</b>', x=0.845, y=0.5, font_size=20, font_color="black", font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
-                       borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
+        annotations=[dict(text='<b>Detailed Breakdown</b>', x=0.165, y=0.5, font_size=20, font_color="black",
+                          font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
+                          borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor),
+                     dict(text='<b>High Level Breakdown</b>', x=0.845, y=0.5, font_size=20, font_color="black",
+                          font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
+                          borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
 
     pyo.plot(fig, filename='bingo_pie.html')
