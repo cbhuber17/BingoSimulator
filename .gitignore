@@ -137,3 +137,6 @@ bingo_env/
 # HTML
 *.html
 *.xml
+
+# CSV
+*.csv
