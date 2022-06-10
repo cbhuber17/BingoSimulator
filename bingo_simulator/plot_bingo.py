@@ -228,7 +228,7 @@ def plot_bingo_histo(df):
     pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
 
 
-def plot_bingo_pie(stats):
+def plot_bingo_pie(num_simulations, df):
     bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
 
     labels1 = []
@@ -236,33 +236,33 @@ def plot_bingo_pie(stats):
 
     for i in range(0, CARD_LENGTH):
         labels1.append(f"<b>Column {bingo_ref[i]}</b>")
-        values1.append(stats.num_line_bingo[1][i])
+        values1.append(df[f'num_bingo_col{i}'].values[0])
 
     labels1.append("<b>Corners</b>")
-    values1.append(stats.num_corners_bingo)
+    values1.append(df['num_corners_bingo'].values[0])
 
-    for i in range(0, 2):
-        labels1.append(f"<b>Diagonal {i + 1}</b>")
-        values1.append(stats.num_diag_bingo[i])
+    for i in [1, 2]:
+        labels1.append(f"<b>Diagonal {i}</b>")
+        values1.append(df[f'num_diag{i}_bingo'].values[0])
 
     for i in range(0, CARD_LENGTH):
         labels1.append(f"<b>Row {i + 1}</b>")
-        values1.append(stats.num_line_bingo[0][i])
+        values1.append(df[f'num_bingo_row{i}'].values[0])
 
     labels2 = []
     values2 = []
 
     labels2.append("<b>Columns</b>")
-    values2.append(sum(stats.num_line_bingo[1]))
+    values2.append(df['num_col_bingo'].values[0])
 
     labels2.append("<b>Corners</b>")
-    values2.append(stats.num_corners_bingo)
+    values2.append(df['num_corners_bingo'].values[0])
 
     labels2.append("<b>Diagonals</b>")
-    values2.append(sum(stats.num_diag_bingo))
+    values2.append(df['num_diag_bingo'].values[0])
 
     labels2.append("<b>Rows</b>")
-    values2.append(sum(stats.num_line_bingo[0]))
+    values2.append(df['num_row_bingo'].values[0])
 
     # Border of annotation properties
     bordercolor = "black"
@@ -283,7 +283,7 @@ def plot_bingo_pie(stats):
 
     fig.update_layout(
         title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(
-            stats.num_simulations),
+            num_simulations),
             'x': 0.5,
             'y': 0.95,
             'xanchor': 'center',

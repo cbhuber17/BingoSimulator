@@ -69,7 +69,8 @@ class BingoCard:
                 if not self.bingo_card[i][CARD_LENGTH - 1 - i][True]:
                     return False
 
-        stats.num_diag_bingo[diag_num - 1] += 1
+        stats.df_num_bingo[f'num_diag{diag_num}_bingo'] += 1
+        stats.df_num_bingo['num_diag_bingo'] += 1
         return True
 
     # ------------------------------------------------------------------------
@@ -82,6 +83,8 @@ class BingoCard:
         if line_num not in list(range(0, CARD_LENGTH)):
             raise ValueError(f'Line number for axis {axis} must be 0-4 in check_line_bingo(): {line_num}.')
 
+        axis_enum = {0: "row", 1: "col"}
+
         if axis == 0:
             for j in range(0, CARD_LENGTH):
                 if not self.bingo_card[line_num][j][True]:
@@ -91,7 +94,9 @@ class BingoCard:
                 if not self.bingo_card[i][line_num][True]:
                     return False
 
-        stats.num_line_bingo[axis][line_num] += 1
+        stats.df_num_bingo[f'num_bingo_{axis_enum[axis]}{line_num}'] += 1
+        stats.df_num_bingo[f'num_{axis_enum[axis]}_bingo'] += 1
+        stats.df_num_bingo['num_line_bingo'] += 1
         return True
 
     # ------------------------------------------------------------------------
@@ -102,7 +107,7 @@ class BingoCard:
                 self.bingo_card[CARD_LENGTH - 1][0][True] and \
                 self.bingo_card[0][CARD_LENGTH - 1][True] and \
                 self.bingo_card[CARD_LENGTH - 1][CARD_LENGTH - 1][True]:
-            stats.num_corners_bingo += 1
+            stats.df_num_bingo['num_corners_bingo'] += 1
             return True
 
         return False
@@ -112,21 +117,24 @@ class BingoCard:
     def check_traditional_bingo(self, stats, num_bingo_balls):
 
         if self._check_corners_bingo(stats):
-            stats.num_tries_corners[num_bingo_balls] += 1
+            stats.df_tries['num_tries_corners'][num_bingo_balls] += 1
             return True
 
         for i in range(0, CARD_LENGTH):
 
             if i in [1, 2] and self._check_diagonal_bingo(i, stats):
-                stats.num_tries_diag[i-1][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_diag{i}'][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_diag'][num_bingo_balls] += 1
                 return True
 
             if self._check_line_bingo(0, i, stats):
-                stats.num_tries_row[i][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_row{i}'][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_rows'][num_bingo_balls] += 1
                 return True
 
             if self._check_line_bingo(1, i, stats):
-                stats.num_tries_col[i][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_col{i}'][num_bingo_balls] += 1
+                stats.df_tries[f'num_tries_cols'][num_bingo_balls] += 1
                 return True
 
         return False
