@@ -113,17 +113,11 @@ class BingoSimulator:
             num_bingo_balls = 0
             got_bingo = False
 
-            for bingo_ball in random_all:
-
-                if got_bingo:
-                    break
+            for bingo_ball in (bingo_ball for bingo_ball in random_all if not got_bingo):
 
                 num_bingo_balls += 1
 
-                for i in range(0, bc.CARD_LENGTH):
-
-                    if got_bingo:
-                        break
+                for i in (i for i in range(0, bc.CARD_LENGTH) if not got_bingo):
 
                     for j in range(0, bc.CARD_LENGTH):
                         if game_card.bingo_card[i][j][False] == bingo_ball:
@@ -133,8 +127,6 @@ class BingoSimulator:
                         if game_card.check_traditional_bingo(self.stats, num_bingo_balls):
                             got_bingo = True
                             self.stats.df_tries['num_bingo_tries'][num_bingo_balls] += 1
-
-                            # print("Numbers called: {}".format(RandomAll[0:num_bingo_balls]))
                             break
 
     # ------------------------------------------------------------------------
@@ -152,6 +144,7 @@ if __name__ == '__main__':
     bingo_game_sim.stats.print_summary()
 
     bingo_game_sim.stats.df_tries.to_csv(STATS_FILENAME)
+    bingo_game_sim.stats.df_num_bingo.to_csv(STATS_FILENAME)
 
     pb.plot_bingo_histo(bingo_game_sim.stats.df_tries)
 
