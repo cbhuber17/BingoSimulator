@@ -1,7 +1,6 @@
 import plotly.offline as pyo
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
 from bingo_card import CARD_LENGTH

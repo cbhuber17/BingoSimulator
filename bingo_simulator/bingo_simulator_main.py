@@ -1,7 +1,8 @@
 from bingo_simulator import bingo_card as bc
 import pandas as pd
 
-STATS_FILENAME = "bingo_stats.csv"
+STATS_TRIES_FILENAME = "bingo_tries.csv"
+BINGO_STATS_FILENAME = "bingo_stats.csv"
 
 
 class BingoStats:
@@ -114,11 +115,9 @@ class BingoSimulator:
             got_bingo = False
 
             for bingo_ball in (bingo_ball for bingo_ball in random_all if not got_bingo):
-
                 num_bingo_balls += 1
 
                 for i in (i for i in range(0, bc.CARD_LENGTH) if not got_bingo):
-
                     for j in range(0, bc.CARD_LENGTH):
                         if game_card.bingo_card[i][j][False] == bingo_ball:
                             game_card.bingo_card[i][j][True] = True
@@ -143,8 +142,8 @@ if __name__ == '__main__':
 
     bingo_game_sim.stats.print_summary()
 
-    bingo_game_sim.stats.df_tries.to_csv(STATS_FILENAME)
-    bingo_game_sim.stats.df_num_bingo.to_csv(STATS_FILENAME)
+    bingo_game_sim.stats.df_tries.to_csv(STATS_TRIES_FILENAME)
+    bingo_game_sim.stats.df_num_bingo.to_csv(BINGO_STATS_FILENAME)
 
     pb.plot_bingo_histo(bingo_game_sim.stats.df_tries)
 
