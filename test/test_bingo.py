@@ -80,14 +80,14 @@ def get_valid_corners():
 
 def test_valid_diagonal_one():
     card, stats = get_valid_diagonal1()
-    assert card._check_diagonal_bingo(1, stats) and stats.num_diag_bingo[0] == 1
+    assert card._check_diagonal_bingo(1, stats) and stats.df_num_bingo['num_diag1_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
 
 def test_valid_diagonal_two():
     card, stats = get_valid_diagonal2()
-    assert card._check_diagonal_bingo(2, stats) and stats.num_diag_bingo[1] == 1
+    assert card._check_diagonal_bingo(2, stats) and stats.df_num_bingo['num_diag2_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ cards_and_stats = list(zip(bad_diagonal_one_cards, diagonal_one_stats))
 
 @pytest.mark.parametrize('card_and_stat', cards_and_stats)
 def test_bad_diagonal_one(card_and_stat):
-    assert not card_and_stat[0]._check_diagonal_bingo(1, card_and_stat[1]) and card_and_stat[1].num_diag_bingo[0] == 0
+    assert not card_and_stat[0]._check_diagonal_bingo(1, card_and_stat[1]) and card_and_stat[1].df_num_bingo['num_diag1_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ cards_and_stats = list(zip(bad_diagonal_two_cards, diagonal_two_stats))
 
 @pytest.mark.parametrize('card_and_stat', cards_and_stats)
 def test_bad_diagonal_two(card_and_stat):
-    assert not card_and_stat[0]._check_diagonal_bingo(2, card_and_stat[1]) and card_and_stat[1].num_diag_bingo[1] == 0
+    assert not card_and_stat[0]._check_diagonal_bingo(2, card_and_stat[1]) and card_and_stat[1].df_num_bingo['num_diag2_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ cards_and_stats_and_line_nums = list(zip(good_rows, good_row_stats, line_num))
 def test_valid_rows(cards_and_stats_and_line_num):
     assert cards_and_stats_and_line_num[0]._check_line_bingo(0, cards_and_stats_and_line_num[2],
                                                              cards_and_stats_and_line_num[1]) \
-           and cards_and_stats_and_line_num[1].num_line_bingo[0][cards_and_stats_and_line_num[2]] == 1
+           and cards_and_stats_and_line_num[1].df_num_bingo[f'num_bingo_row{cards_and_stats_and_line_num[2]}'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ cards_and_stats_and_line_nums = list(zip(good_cols, good_col_stats, line_num))
 def test_valid_cols(cards_and_stats_and_line_num):
     assert cards_and_stats_and_line_num[0]._check_line_bingo(1, cards_and_stats_and_line_num[2],
                                                              cards_and_stats_and_line_num[1]) \
-           and cards_and_stats_and_line_num[1].num_line_bingo[1][cards_and_stats_and_line_num[2]] == 1
+           and cards_and_stats_and_line_num[1].df_num_bingo[f'num_bingo_col{cards_and_stats_and_line_num[2]}'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ cards_and_stats_and_line_nums = list(zip(bad_rows, bad_row_stats, line_num))
 def test_invalid_rows(cards_and_stats_and_line_num):
     assert not cards_and_stats_and_line_num[0]._check_line_bingo(0, cards_and_stats_and_line_num[2],
                                                                  cards_and_stats_and_line_num[1]) \
-           and cards_and_stats_and_line_num[1].num_line_bingo[0][cards_and_stats_and_line_num[2]] == 0
+           and cards_and_stats_and_line_num[1].df_num_bingo[f'num_bingo_row{cards_and_stats_and_line_num[2]}'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -215,14 +215,14 @@ cards_and_stats_and_line_nums = list(zip(bad_cols, bad_col_stats, line_num))
 def test_invalid_cols(cards_and_stats_and_line_num):
     assert not cards_and_stats_and_line_num[0]._check_line_bingo(1, cards_and_stats_and_line_num[2],
                                                                  cards_and_stats_and_line_num[1]) \
-           and cards_and_stats_and_line_num[1].num_line_bingo[1][cards_and_stats_and_line_num[2]] == 0
+           and cards_and_stats_and_line_num[1].df_num_bingo[f'num_bingo_col{cards_and_stats_and_line_num[2]}'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
 
 def test_valid_corners():
     card, stats = get_valid_corners()
-    assert card._check_corners_bingo(stats) and stats.num_corners_bingo == 1
+    assert card._check_corners_bingo(stats) and stats.df_num_bingo['num_corners_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ def test_valid_corners():
 def test_invalid_corner1():
     card, stats = get_valid_corners()
     card.bingo_card[0][0][True] = False
-    assert not card._check_corners_bingo(stats) and stats.num_corners_bingo == 0
+    assert not card._check_corners_bingo(stats) and stats.df_num_bingo['num_corners_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -238,7 +238,7 @@ def test_invalid_corner1():
 def test_invalid_corner2():
     card, stats = get_valid_corners()
     card.bingo_card[CARD_LENGTH - 1][0][True] = False
-    assert not card._check_corners_bingo(stats) and stats.num_corners_bingo == 0
+    assert not card._check_corners_bingo(stats) and stats.df_num_bingo['num_corners_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -246,7 +246,7 @@ def test_invalid_corner2():
 def test_invalid_corner3():
     card, stats = get_valid_corners()
     card.bingo_card[0][CARD_LENGTH - 1][True] = False
-    assert not card._check_corners_bingo(stats) and stats.num_corners_bingo == 0
+    assert not card._check_corners_bingo(stats) and stats.df_num_bingo['num_corners_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ def test_invalid_corner3():
 def test_invalid_corner4():
     card, stats = get_valid_corners()
     card.bingo_card[CARD_LENGTH - 1][CARD_LENGTH - 1][True] = False
-    assert not card._check_corners_bingo(stats) and stats.num_corners_bingo == 0
+    assert not card._check_corners_bingo(stats) and stats.df_num_bingo['num_corners_bingo'].values == 0
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -262,7 +262,7 @@ def test_invalid_corner4():
 
 def test_valid_traditional_bingo1():
     card, stats = get_valid_diagonal1()
-    assert card.check_traditional_bingo(stats, 0) and stats.num_diag_bingo[0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.df_num_bingo['num_diag1_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ def test_valid_traditional_bingo1():
 
 def test_valid_traditional_bingo2():
     card, stats = get_valid_diagonal2()
-    assert card.check_traditional_bingo(stats, 0) and stats.num_diag_bingo[1] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.df_num_bingo['num_diag2_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -278,14 +278,14 @@ def test_valid_traditional_bingo2():
 
 def test_valid_traditional_bingo3():
     card, stats = get_valid_row(0)
-    assert card.check_traditional_bingo(stats, 0) and stats.num_line_bingo[0][0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.df_num_bingo['num_bingo_row0'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
 
 def test_valid_traditional_bingo4():
     card, stats = get_valid_col(0)
-    assert card.check_traditional_bingo(stats, 0) and stats.num_line_bingo[1][0] == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.df_num_bingo['num_bingo_col0'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -293,7 +293,7 @@ def test_valid_traditional_bingo4():
 
 def test_valid_traditional_bingo5():
     card, stats = get_valid_corners()
-    assert card.check_traditional_bingo(stats, 0) and stats.num_corners_bingo == 1
+    assert card.check_traditional_bingo(stats, 0) and stats.df_num_bingo['num_corners_bingo'].values == 1
 
 
 # -------------------------------------------------------------------------------------------------------------
@@ -316,16 +316,16 @@ def test_invalid_traditional_bingo():
     card.bingo_card[4][3][True] = True
 
     assert not card.check_traditional_bingo(stats, 0) and \
-           stats.num_diag_bingo[0] == 0 and \
-           stats.num_diag_bingo[1] == 0 and \
-           stats.num_line_bingo[0][0] == 0 and \
-           stats.num_line_bingo[0][1] == 0 and \
-           stats.num_line_bingo[0][2] == 0 and \
-           stats.num_line_bingo[0][3] == 0 and \
-           stats.num_line_bingo[0][4] == 0 and \
-           stats.num_line_bingo[1][0] == 0 and \
-           stats.num_line_bingo[1][1] == 0 and \
-           stats.num_line_bingo[1][2] == 0 and \
-           stats.num_line_bingo[1][3] == 0 and \
-           stats.num_line_bingo[1][4] == 0 and \
-           stats.num_corners_bingo == 0
+           stats.df_num_bingo['num_diag1_bingo'].values == 0 and \
+           stats.df_num_bingo['num_diag2_bingo'].values == 0 and \
+           stats.df_num_bingo['num_bingo_row0'].values == 0 and \
+           stats.df_num_bingo['num_bingo_row1'].values == 0 and \
+           stats.df_num_bingo['num_bingo_row2'].values == 0 and \
+           stats.df_num_bingo['num_bingo_row3'].values == 0 and \
+           stats.df_num_bingo['num_bingo_row4'].values == 0 and \
+           stats.df_num_bingo['num_bingo_col0'].values == 0 and \
+           stats.df_num_bingo['num_bingo_col0'].values == 0 and \
+           stats.df_num_bingo['num_bingo_col0'].values == 0 and \
+           stats.df_num_bingo['num_bingo_col0'].values == 0 and \
+           stats.df_num_bingo['num_bingo_col0'].values == 0 and \
+           stats.df_num_bingo['num_corners_bingo'].values == 0
