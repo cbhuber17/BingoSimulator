@@ -16,7 +16,8 @@ def gauss_curve(x, a, x0, sigma):
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(df):
+def plot_bingo_histo(df, detail_size="large", plot_offline=True):
+
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
     peak_estimate = max(df['num_bingo_tries'])
@@ -142,6 +143,13 @@ def plot_bingo_histo(df):
         marker_line=dict(width=1, color='black')
     )
 
+    data_small = data1
+    data_medium = [data1d, data1c, data1b, data1a]
+    data_large = [data1d, data1cb, data1ca, data1be, data1bd, data1bc, data1bb, data1ba, data1ae, data1ad,
+                          data1ac, data1ab, data1aa]
+
+    data_selector = {"small": data_small, "medium": data_medium, "large": data_large}
+
     data2 = go.Scatter(
         x=df.index,
         y=y_gauss_curve,
@@ -207,8 +215,7 @@ def plot_bingo_histo(df):
     box_width = 170
     box_height = 100
 
-    fig = go.Figure(data=[data1d, data1cb, data1ca, data1be, data1bd, data1bc, data1bb, data1ba, data1ae, data1ad,
-                          data1ac, data1ab, data1aa], layout=layout)
+    fig = go.Figure(data=data_selector[detail_size], layout=layout)
     # fig.add_trace(data1)
     fig.add_trace(data2)
     fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
@@ -224,7 +231,12 @@ def plot_bingo_histo(df):
                        bordercolor=bordercolor, borderpad=borderpad, borderwidth=borderwidth, bgcolor=border_bgcolor,
                        align="left", valign="top")
 
-    pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
+    if plot_offline:
+        pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
+
+    return fig
+
+# ------------------------------------------------------------------------------------------------------------------
 
 
 def plot_bingo_pie(num_simulations, df):
@@ -306,3 +318,5 @@ def plot_bingo_pie(num_simulations, df):
                           borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
 
     pyo.plot(fig, filename='bingo_pie.html')
+
+    return fig
