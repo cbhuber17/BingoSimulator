@@ -16,7 +16,7 @@ def gauss_curve(x, a, x0, sigma):
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(df, detail_size="large", plot_offline=True):
+def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
 
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
@@ -148,7 +148,7 @@ def plot_bingo_histo(df, detail_size="large", plot_offline=True):
     data_large = [data1d, data1cb, data1ca, data1be, data1bd, data1bc, data1bb, data1ba, data1ae, data1ad,
                           data1ac, data1ab, data1aa]
 
-    data_selector = {"small": data_small, "medium": data_medium, "large": data_large}
+    data_selector = {"Histo-small": data_small, "Histo-medium": data_medium, "Histo-large": data_large}
 
     data2 = go.Scatter(
         x=df.index,
@@ -239,7 +239,10 @@ def plot_bingo_histo(df, detail_size="large", plot_offline=True):
 # ------------------------------------------------------------------------------------------------------------------
 
 
-def plot_bingo_pie(num_simulations, df):
+def plot_bingo_pie(df, plot_offline=True):
+
+    num_simulations = int(df['num_line_bingo'].values + df['num_diag_bingo'].values + df['num_corners_bingo'].values)
+
     bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
 
     labels1 = []
@@ -317,6 +320,7 @@ def plot_bingo_pie(num_simulations, df):
                           font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
                           borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
 
-    pyo.plot(fig, filename='bingo_pie.html')
+    if plot_offline:
+        pyo.plot(fig, filename='bingo_pie.html')
 
     return fig

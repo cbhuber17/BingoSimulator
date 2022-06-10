@@ -147,4 +147,4 @@ if __name__ == '__main__':
 
     pb.plot_bingo_histo(bingo_game_sim.stats.df_tries)
 
-    pb.plot_bingo_pie(bingo_game_sim.stats.num_simulations, bingo_game_sim.stats.df_num_bingo)
+    pb.plot_bingo_pie(bingo_game_sim.stats.df_num_bingo)
