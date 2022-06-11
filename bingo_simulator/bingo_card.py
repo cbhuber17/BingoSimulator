@@ -27,8 +27,6 @@ class BingoCard:
 
         for i in range(0, CARD_LENGTH):
             self.bingo_card[i] = copy.deepcopy(bingo_row)
-
-        for i in range(0, CARD_LENGTH):
             column_ranges[i] = range(COLUMN_RANGE*i + 1, COLUMN_RANGE*(i+1) + 1)
             column_random[i] = random.sample(column_ranges[i], CARD_LENGTH)
 
