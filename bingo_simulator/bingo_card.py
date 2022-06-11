@@ -1,4 +1,6 @@
+import math
 import random
+import copy
 
 # Typical BINGO card layout
 CARD_LENGTH = 5  # 5x5 square card
@@ -11,14 +13,20 @@ class BingoCard:
 
         bingo_cell = [0, False]
 
-        self.bingo_card = [[bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                           [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                           [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                           [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell],
-                           [bingo_cell, bingo_cell, bingo_cell, bingo_cell, bingo_cell]]
+        self.bingo_card = []
+        bingo_row = []
 
-        column_ranges = [[], [], [], [], []]
-        column_random = [[], [], [], [], []]
+        column_ranges = []
+        column_random = []
+
+        for i in range(0, CARD_LENGTH):
+            self.bingo_card.append([])
+            column_ranges.append([])
+            column_random.append([])
+            bingo_row.append(copy.deepcopy(bingo_cell))
+
+        for i in range(0, CARD_LENGTH):
+            self.bingo_card[i] = copy.deepcopy(bingo_row)
 
         for i in range(0, CARD_LENGTH):
             column_ranges[i] = range(COLUMN_RANGE*i + 1, COLUMN_RANGE*(i+1) + 1)
@@ -31,9 +39,10 @@ class BingoCard:
             for j in range(0, CARD_LENGTH):
                 self.bingo_card[j][i] = [column_random[i][j], False]
 
-        # Is the middle cell FREE?
-        if free_cell:
-            self.bingo_card[2][2] = [0, True]
+        # Is the middle cell FREE?  Only applicable to bingo cards that have odd dimensions
+        mid_index = math.floor(CARD_LENGTH)
+        if free_cell and CARD_LENGTH % 2 == 1:
+            self.bingo_card[mid_index][mid_index] = [0, True]
 
     # ------------------------------------------------------------------------
 
