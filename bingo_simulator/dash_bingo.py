@@ -26,9 +26,9 @@ app.layout = html.Div([
         ], style={'text-align': 'center'}
     ),
 
-    dcc.Graph(id="graph1", style={'height': '95vh'}, mathjax='cdn'),
+    dcc.Graph(id="graph1", style={'height': '95vh'}, mathjax='cdn', responsive='auto'),
     html.Hr(),
-    dcc.Graph(id="graph2", style={'height': '95vh'}, figure=plot_bingo_pie(df_pie, False)),
+    dcc.Graph(id="graph2", style={'height': '95vh'}, responsive='auto', figure=plot_bingo_pie(df_pie, False)),
     html.Hr(),
     html.Footer('This page was created using python apps: Plotly and Dash - Content developed by Colin Huber',
                 style={'text-align': 'center'})

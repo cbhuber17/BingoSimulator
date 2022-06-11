@@ -188,8 +188,8 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
 
     # LaTeX format to show the model equation and stat values
     model_equation = r"$\normalsize{\alpha * e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
-    model_results = r"$\alpha={:.1f}\\\mu={:.1f}\\\sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
-    equation_to_show = model_equation[:-1] + r"\\" + model_results[1:]
+    model_results = r"$\alpha={:.0f}\\\mu={:.1f}\\\sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
+    equation_to_show = r'$\displaylines{' + model_equation[1:-1] + r"\\" + model_results[1:-1] + r'}$'
 
     # Arrow properties
     arrowhead = 2
@@ -208,7 +208,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     # Border of annotation properties
     bordercolor = "red"
     borderwidth = 3
-    borderpad = 20
+    borderpad = 35
     border_bgcolor = "white"
 
     fig = go.Figure(data=data_selector[detail_size], layout=layout)
