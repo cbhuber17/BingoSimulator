@@ -303,10 +303,10 @@ def plot_bingo_pie(df, plot_offline=True):
             bordercolor="black",
             font=dict(family="MV Boli", color="White")
         ),
-        annotations=[dict(text='<b>Detailed Breakdown</b>', x=0.165, y=0.5, font_size=20, font_color="black",
+        annotations=[dict(text='<b>Detailed<br>Breakdown</b>', x=0.17, y=0.5, font_size=14, font_color="black",
                           font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
                           borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor),
-                     dict(text='<b>High Level Breakdown</b>', x=0.845, y=0.5, font_size=20, font_color="black",
+                     dict(text='<b>High Level<br>Breakdown</b>', x=0.83, y=0.5, font_size=14, font_color="black",
                           font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,
                           borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
 
