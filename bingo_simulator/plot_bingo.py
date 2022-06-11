@@ -16,7 +16,7 @@ def gauss_curve(x, a, x0, sigma):
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
+def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
     peak_estimate = max(df['num_bingo_tries'])
