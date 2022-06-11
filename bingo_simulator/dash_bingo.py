@@ -14,15 +14,15 @@ df_pie = pd.read_csv("bingo_stats.csv")
 
 # Dash HTML layout
 app.layout = html.Div([
-    html.Div(
+    html.Header(
         [html.H1("BINGO Simulator! Statistics on the BINGO game played 1,000,000 times!")],
         style={'text-align': 'center', 'text-decoration': 'underline'}
     ),
     html.Div(
         [
-            html.H2("Select Plot Details:", style={'display': 'inline-block'}),
-            dcc.RadioItems(["Histo-small", "Histo-medium", "Histo-large"], value="Histo-large", inline=True,
-                           id="radio_options", style={'display': 'inline-block'})
+            html.H2("Select Level of Detail for Histogram:", style={'display': 'inline-block', 'color': "red"}),
+            dcc.RadioItems(["Small", "Medium", "Large"], value="Large", inline=True,
+                           id="radio_options", labelStyle={'margin-left': '15px'}, style={'display': 'inline-block'})
         ], style={'text-align': 'center'}
     ),
 

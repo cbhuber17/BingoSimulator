@@ -17,7 +17,6 @@ def gauss_curve(x, a, x0, sigma):
 
 
 def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
-
     # Preliminary stats and estimates
     num_simulations = sum(df['num_bingo_tries'])
     peak_estimate = max(df['num_bingo_tries'])
@@ -146,9 +145,9 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
     data_small = data1
     data_medium = [data1d, data1c, data1b, data1a]
     data_large = [data1d, data1cb, data1ca, data1be, data1bd, data1bc, data1bb, data1ba, data1ae, data1ad,
-                          data1ac, data1ab, data1aa]
+                  data1ac, data1ab, data1aa]
 
-    data_selector = {"Histo-small": data_small, "Histo-medium": data_medium, "Histo-large": data_large}
+    data_selector = {"Small": data_small, "Medium": data_medium, "Large": data_large}
 
     data2 = go.Scatter(
         x=df.index,
@@ -200,7 +199,7 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
     # Border of annotation properties
     bordercolor = "blue"
     borderwidth = 3
-    borderpad = 35
+    borderpad = 50
     border_bgcolor = "white"
 
     # Annotation variables
@@ -237,11 +236,11 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
 
     return fig
 
+
 # ------------------------------------------------------------------------------------------------------------------
 
 
 def plot_bingo_pie(df, plot_offline=True):
-
     num_simulations = int(df['num_line_bingo'].values + df['num_diag_bingo'].values + df['num_corners_bingo'].values)
 
     bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
