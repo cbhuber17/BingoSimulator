@@ -187,8 +187,9 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
         ))
 
     # LaTeX format to show the model equation and stat values
-    model_equation = r"$\Large{\alpha * e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
-    model_results = r"$\alpha={:.1f}, \mu={:.1f}, \sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
+    model_equation = r"$\normalsize{\alpha * e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
+    model_results = r"$\alpha={:.1f}\\\mu={:.1f}\\\sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
+    equation_to_show = model_equation[:-1] + r"\\" + model_results[1:]
 
     # Arrow properties
     arrowhead = 2
@@ -196,43 +197,32 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     arrowwidth = 2
     arrowcolor = "red"
 
-    # Border of annotation properties
-    bordercolor = "blue"
-    borderwidth = 3
-    borderpad = 50
-    border_bgcolor = "white"
-
     # Annotation variables
     x_annotation_point = int(mean_estimate - sigma_estimate)
     y_annotation_point = y_gauss_curve[x_annotation_point]
-    x_stats_annotation_point = 18
-    y_stats_annotation_point = y_annotation_point
 
-    x_arrow_vector = -350
-    y_arrow_vector = -150
+    # Optimal vector chosen based on responsiveness of viewport (absolute coordinates)
+    x_arrow_vector = -200
+    y_arrow_vector = -50
 
-    # TODO: Figure this out for LaTeX, this may be a plotly bug
-    box_width = 170
-    box_height = 100
+    # Border of annotation properties
+    bordercolor = "red"
+    borderwidth = 3
+    borderpad = 20
+    border_bgcolor = "white"
 
     fig = go.Figure(data=data_selector[detail_size], layout=layout)
-    # fig.add_trace(data1)
     fig.add_trace(data2)
     fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
 
     # Arrow annotation of the equation of the curve
-    fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=model_equation, showarrow=True,
+    fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=equation_to_show, showarrow=True,
                        arrowhead=arrowhead, arrowsize=arrowsize, arrowwidth=arrowwidth, arrowcolor=arrowcolor,
-                       ax=x_arrow_vector, ay=y_arrow_vector, bordercolor=bordercolor, borderwidth=borderwidth,
-                       borderpad=borderpad, bgcolor=border_bgcolor, font=dict(color="blue"))
-
-    # Annotation of the curve parameters
-    fig.add_annotation(x=x_stats_annotation_point, y=y_stats_annotation_point, text=model_results, showarrow=False,
                        bordercolor=bordercolor, borderpad=borderpad, borderwidth=borderwidth, bgcolor=border_bgcolor,
-                       align="left", valign="top", font=dict(family="MV Boli", color="blue"))
+                       ax=x_arrow_vector, ay=y_arrow_vector, font=dict(color="navy"))
 
     if plot_offline:
-        pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
+        pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn', config={'responsive': True})
 
     return fig
 
