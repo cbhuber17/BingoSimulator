@@ -37,110 +37,110 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
         x=df.index,
         y=df['num_bingo_tries'],
         name="Frequency",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1a = go.Bar(
         x=df.index,
         y=df['num_tries_rows'],
         name="Rows",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1aa = go.Bar(
         x=df.index,
         y=df['num_tries_row0'],
         name="Row 1",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1ab = go.Bar(
         x=df.index,
         y=df['num_tries_row1'],
         name="Row 2",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1ac = go.Bar(
         x=df.index,
         y=df['num_tries_row2'],
         name="Row 3",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1ad = go.Bar(
         x=df.index,
         y=df['num_tries_row3'],
         name="Row 4",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1ae = go.Bar(
         x=df.index,
         y=df['num_tries_row4'],
         name="Row 5",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1b = go.Bar(
         x=df.index,
         y=df['num_tries_cols'],
         name="Columns",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1ba = go.Bar(
         x=df.index,
         y=df['num_tries_col0'],
         name="Column B",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1bb = go.Bar(
         x=df.index,
         y=df['num_tries_col1'],
         name="Column I",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1bc = go.Bar(
         x=df.index,
         y=df['num_tries_col2'],
         name="Column N",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1bd = go.Bar(
         x=df.index,
         y=df['num_tries_col3'],
         name="Column G",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1be = go.Bar(
         x=df.index,
         y=df['num_tries_col4'],
         name="Column O",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1c = go.Bar(
         x=df.index,
         y=df['num_tries_diag'],
         name="Diagonals",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1ca = go.Bar(
         x=df.index,
         y=df['num_tries_diag2'],
         name="Diagonal 2",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
     data1cb = go.Bar(
         x=df.index,
         y=df['num_tries_diag1'],
         name="Diagonal 1",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data1d = go.Bar(
         x=df.index,
         y=df['num_tries_corners'],
         name="Corners",
-        marker_line=dict(width=1, color='black')
+        marker_line=dict(width=1, color='white')
     )
 
     data_small = data1
@@ -154,7 +154,7 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
         x=df.index,
         y=y_gauss_curve,
         name="Gauss Fit",
-        line=dict(width=4)
+        line=dict(width=4, color='red')
     )
 
     layout = go.Layout(
@@ -165,6 +165,7 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
             'y': 0.95,
             'xanchor': 'center',
             'yanchor': 'top',
+            'font': dict(color='orange')
         },
         barmode="stack",
         xaxis_title={'text': "Number of bingo balls"},
@@ -173,22 +174,22 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
         font=dict(
             family="MV Boli",
             size=30,
-            color="Black"
+            color="yellow"
         ),
-        paper_bgcolor='#F5F5F5',
-        plot_bgcolor='#D6D6D6',
+        paper_bgcolor='black',
+        plot_bgcolor='black',
         spikedistance=1000,
         hoverdistance=100,
         hoverlabel=dict(
             font_size=16,
             font=dict(color="White",
-                      family="Verdana")
+                      family="MV Boli")
 
         ))
 
     # LaTeX format to show the model equation and stat values
-    model_equation = r"$\Large{\frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
-    model_results = r"$a={:.1f}, \mu={:.1f}, \sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
+    model_equation = r"$\Large{\alpha * e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
+    model_results = r"$\alpha={:.1f}, \mu={:.1f}, \sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
 
     # Arrow properties
     arrowhead = 2
@@ -197,7 +198,7 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
     arrowcolor = "red"
 
     # Border of annotation properties
-    bordercolor = "black"
+    bordercolor = "blue"
     borderwidth = 3
     borderpad = 35
     border_bgcolor = "white"
@@ -205,7 +206,7 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
     # Annotation variables
     x_annotation_point = int(mean_estimate - sigma_estimate)
     y_annotation_point = y_gauss_curve[x_annotation_point]
-    x_stats_annotation_point = 17
+    x_stats_annotation_point = 18
     y_stats_annotation_point = y_annotation_point
 
     x_arrow_vector = -350
@@ -224,12 +225,12 @@ def plot_bingo_histo(df, detail_size="Histo-large", plot_offline=True):
     fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=model_equation, showarrow=True,
                        arrowhead=arrowhead, arrowsize=arrowsize, arrowwidth=arrowwidth, arrowcolor=arrowcolor,
                        ax=x_arrow_vector, ay=y_arrow_vector, bordercolor=bordercolor, borderwidth=borderwidth,
-                       borderpad=borderpad, bgcolor=border_bgcolor)
+                       borderpad=borderpad, bgcolor=border_bgcolor, font=dict(color="blue"))
 
     # Annotation of the curve parameters
     fig.add_annotation(x=x_stats_annotation_point, y=y_stats_annotation_point, text=model_results, showarrow=False,
                        bordercolor=bordercolor, borderpad=borderpad, borderwidth=borderwidth, bgcolor=border_bgcolor,
-                       align="left", valign="top")
+                       align="left", valign="top", font=dict(family="MV Boli", color="blue"))
 
     if plot_offline:
         pyo.plot(fig, filename='bingo_histo.html', include_mathjax='cdn')
@@ -311,7 +312,7 @@ def plot_bingo_pie(df, plot_offline=True):
         hoverlabel=dict(
             font_size=30,
             bordercolor="black",
-            font=dict(color="White")
+            font=dict(family="MV Boli", color="White")
         ),
         annotations=[dict(text='<b>Detailed Breakdown</b>', x=0.165, y=0.5, font_size=20, font_color="black",
                           font_family="Century Gothic", showarrow=False, borderwidth=borderwidth,

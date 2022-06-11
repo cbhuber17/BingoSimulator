@@ -51,7 +51,7 @@ class BingoStats:
     # ------------------------------------------------------------------------
 
     def _print_bingo_result(self, item, num_result):
-        print("{} bingo:  {}, {}%".format(item, num_result, self._compute_percentage(num_result)))
+        print("{} bingo:  {}, {}%".format(item, int(num_result.values), self._compute_percentage(num_result)))
 
     # ------------------------------------------------------------------------
 
@@ -83,14 +83,14 @@ class BingoStats:
 
         self._print_bingo_result("Corners", self.df_num_bingo['num_corners_bingo'])
 
-        print("Num total tries:", self.df_tries['num_bingo_tries'])
-        print("Num corner tries:", self.df_tries['num_tries_corners'])
+        print("Num total tries:", self.df_tries['num_bingo_tries'].values)
+        print("Num corner tries:", self.df_tries['num_tries_corners'].values)
 
         for i in range(0, bc.CARD_LENGTH):
             if i in [1, 2]:
-                print(f"Num diag {i} tries: ", self.df_tries[f'num_tries_diag{i}'])
-            print(f"Num row {i} tries: ", self.df_tries[f'num_tries_row{i}'])
-            print(f"Num col {i} tries: ", self.df_tries[f'num_tries_col{i}'])
+                print(f"Num diag {i} tries: ", self.df_tries[f'num_tries_diag{i}'].values)
+            print(f"Num row {i} tries: ", self.df_tries[f'num_tries_row{i}'].values)
+            print(f"Num col {i} tries: ", self.df_tries[f'num_tries_col{i}'].values)
 
     # ------------------------------------------------------------------------
 
