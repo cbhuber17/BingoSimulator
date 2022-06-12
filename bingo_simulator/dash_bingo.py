@@ -3,7 +3,7 @@ from dash import dcc
 from dash import html
 import pandas as pd
 from dash.dependencies import Input, Output
-from plot_bingo import plot_bingo_histo, plot_bingo_pie
+from plot_bingo import plot_bingo_histo, plot_bingo_pie, FONT_FAMILY
 
 app = dash.Dash()
 
@@ -33,18 +33,25 @@ app.layout = html.Div([
     html.Footer('This page was created using python apps: Plotly and Dash - Content developed by Colin Huber',
                 style={'text-align': 'center'})
 
-], style={'fontFamily': 'MV Boli', 'fontSize': 18, 'color': 'white', 'border': '2px solid white',
+], style={'fontFamily': FONT_FAMILY, 'fontSize': 18, 'color': 'white', 'border': '2px solid white',
           'background-color': '#3a3f44'})
 
 
+# ------------------------------------------------------------------------
+
 @app.callback(Output('graph1', 'figure'), [Input('radio_options', 'value')])
 def update_histo(detail_size):
+    """Updates the histogram based on the radio-button detail-size selected.
+    :param: detail_size (str) The details put in the histogram plot as: 'small', 'medium', or 'large' (default)
+    :return: (go.Figure) object to be dynamically updated"""
 
     fig = plot_bingo_histo(df, detail_size, False)
 
     fig.update_layout(transition_duration=500)
     return fig
 
+
+# ------------------------------------------------------------------------
 
 if __name__ == '__main__':
     app.run_server()
