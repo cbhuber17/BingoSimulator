@@ -188,10 +188,75 @@ def set_labels_and_values(df, label, value, label_str, value_key):
 
 # ------------------------------------------------------------------------------------------------------------------
 
-def plot_bingo_pie(df, plot_offline=True, subplot_cols=True):
+def get_pie_annotation_dict(text, x, y, font_size):
+    """Returns a dictionary of annotations to use with the pie chart.
+    :param: text (str) Text to annotate with
+    :param: x (int) The x-coordinate of the annotation on the plot
+    :param: y (int) The y-coordinate of the annotation on the plot
+    :param: font_size (int) The size of the font in the annotation
+    :return: (dict) a dictionary filled with annotation properties that is common among the pie charts."""
+
+    # Border of annotation properties
+    bordercolor = "black"
+    borderwidth = 3
+    borderpad = 5
+    border_bgcolor = "white"
+
+    return dict(text=f'<b>{text}</b>', x=x, y=y, font_size=font_size, font_color="black",
+                font_family=FONT_FAMILY2, showarrow=False, borderwidth=borderwidth,
+                borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)
+
+
+# ------------------------------------------------------------------------------------------------------------------
+
+def get_pie_fig_and_annotation(detail, x1, y1, x2, y2, font_size):
+    """Returns the fig and annotation objects to use in the pie charts.
+    :param: detail (str) either as "subplot_cols" or "subplot_rows"
+    :param: x1 (int) The x-coordinate of the first annotation on the plot
+    :param: y1 (int) The y-coordinate of the first annotation on the plot
+    :param: x2 (int) The x-coordinate of the second annotation on the plot
+    :param: y2 (int) The y-coordinate of the second annotation on the plot
+    :param: font_size (int) The size of the font in the annotation
+    :return: fig (go.Figure) and annotation (dict)"""
+
+    spec = {'type': 'domain'}
+
+    if detail == "subplot_cols":
+        fig = make_subplots(rows=1, cols=2, specs=[[spec, spec]])
+
+    else:
+        fig = make_subplots(rows=2, cols=1, specs=[[spec], [spec]])
+
+    annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", x1, y1, font_size),
+                   get_pie_annotation_dict("High Level<br>Breakdown", x2, y2, font_size)]
+
+    return fig, annotations
+
+
+# ------------------------------------------------------------------------------------------------------------------
+
+def add_trace(fig, label, value, detail, row, col):
+    """Adds a trace to the figure.
+    :param: fig (go.Figure) The figure to be updated
+    :param: label (str) as "High" or "Low'
+    :param: row (int) as 1 or 2 (location in subplot)
+    :param: col (int) as 1 or 2 (location in subplot)
+    :return: None (fig is automatically updated by reference)"""
+
+    fig.add_trace(go.Pie(labels=label, values=value, name=f"Bingo {detail} Level Breakdown",
+                         textfont=dict(family=FONT_FAMILY2)), row, col)
+
+# ------------------------------------------------------------------------------------------------------------------
+
+def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
     """Plots the BINGO pie charts.
     :param: df (pandas.df) DataFrame containing number of tries for each BINGO win
     :param: plot_offline (bool) If an offline plot is to be generated (default: True)
+    :param: detail (str) One of the following: "subplot_rows", "subplot_cols", "high", "low" (default: "subplot_cols")
+            - "subplot_rows" - Plots both the high detail and low detail pie charts in a 2x1 subplot
+            - "subplot_cols" - Plots both the high detail and low detail pie chars in a 1x2 subplot
+            - "high" - Plots a single high detail pie chart
+            - "low" - Plots a single low detail pie chart
     :return: (go.Figure) object"""
 
     # Total number of simulations
@@ -224,31 +289,33 @@ def plot_bingo_pie(df, plot_offline=True, subplot_cols=True):
     set_labels_and_values(df, labels2, values2, "Diagonals", "num_diag_bingo")
     set_labels_and_values(df, labels2, values2, "Rows", "num_row_bingo")
 
-    # 2 pie charts in subplots, as rows or cols
-    if subplot_cols:
-        fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
-    else:
-        fig = make_subplots(rows=2, cols=1, specs=[[{'type': 'domain'}], [{'type': 'domain'}]])
+    # 2 pie charts in subplots, as rows or cols, or single plot as high or low details
+    if detail == "subplot_cols":
+        fig, annotations = get_pie_fig_and_annotation(detail, 0.18, 0.5, 0.82, 0.5, font_size)
 
-    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown",
-                         textfont=dict(family=FONT_FAMILY2)), 1, 1)
+    elif detail == "subplot_rows":
+        fig, annotations = get_pie_fig_and_annotation(detail, 0.5, 0.82, 0.5, 0.18, font_size)
 
-    if subplot_cols:
-        fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
-                             textfont=dict(family=FONT_FAMILY2)), 1, 2)
+    elif detail == "high":
+        fig = go.Figure(data=[go.Pie(labels=labels1, values=values1, textinfo='label+percent')])
+        annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", 0.5, 0.5, font_size)]
+
     else:
-        fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
-                             textfont=dict(family=FONT_FAMILY2)), 2, 1)
+        fig = go.Figure(data=[go.Pie(labels=labels2, values=values2, textinfo='label+percent')])
+        annotations = [get_pie_annotation_dict("High Level<br>Breakdown", 0.5, 0.5, font_size)]
+
+    if detail == "subplot_cols" or detail == "subplot_rows":
+        add_trace(fig, labels1, values1, "Low", 1, 1)
+
+        if detail == "subplot_cols":
+            add_trace(fig, labels2, values2, "High", 1, 2)
+
+        else:
+            add_trace(fig, labels2, values2, "High", 2, 1)
 
     fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
                       textposition="auto", hole=.4, direction='clockwise', sort=False,
                       marker=dict(line=dict(color='#000000', width=5)))
-
-    # Border of annotation properties
-    bordercolor = "black"
-    borderwidth = 3
-    borderpad = 5
-    border_bgcolor = "white"
 
     # Layout
     fig.update_layout(
@@ -269,12 +336,8 @@ def plot_bingo_pie(df, plot_offline=True, subplot_cols=True):
             bordercolor="black",
             font=dict(family=FONT_FAMILY, color="White")
         ),
-        annotations=[dict(text='<b>Detailed<br>Breakdown</b>', x=0.17, y=0.5, font_size=14, font_color="black",
-                          font_family=FONT_FAMILY2, showarrow=False, borderwidth=borderwidth,
-                          borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor),
-                     dict(text='<b>High Level<br>Breakdown</b>', x=0.83, y=0.5, font_size=14, font_color="black",
-                          font_family=FONT_FAMILY2, showarrow=False, borderwidth=borderwidth,
-                          borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)])
+        annotations=annotations,
+        margin=dict(t=170))
 
     if plot_offline:
         pyo.plot(fig, filename=HTML_PIE_FILE)
