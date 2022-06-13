@@ -66,6 +66,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     # Get bar graph (stacked) objects
     data_total = get_bar_object(df, 'num_bingo_tries', 'frequency')
 
+    # Done in this order for proper legend presentation
     data_rows = get_bar_object(df, 'num_tries_rows', 'Rows')
     data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1')
     data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2')
@@ -172,8 +173,22 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
 
 # ------------------------------------------------------------------------------------------------------------------
 
+def set_labels_and_values(df, label, value, label_str, value_key):
+    """Sets the labels and values for pie chart plotting.
+    :param: df (pandas.df) DataFrame containing number of tries for each BINGO win
+    :param: label (list) a list of strings labelling each piece of the pie chart
+    :param: value (list) a list of ints for the value for each piece of the pie chart
+    :param: label_str (str) the actual label to append to the label list
+    :param: value_key (str) the dict key for the df to retrieve the value to put in the values list
+    :return: None
+    """
+    label.append(f"<b>{label_str}</b>")
+    value.append(df[value_key].values[0])
 
-def plot_bingo_pie(df, plot_offline=True):
+
+# ------------------------------------------------------------------------------------------------------------------
+
+def plot_bingo_pie(df, plot_offline=True, subplot_cols=True):
     """Plots the BINGO pie charts.
     :param: df (pandas.df) DataFrame containing number of tries for each BINGO win
     :param: plot_offline (bool) If an offline plot is to be generated (default: True)
@@ -188,36 +203,46 @@ def plot_bingo_pie(df, plot_offline=True):
     labels1 = []
     values1 = []
 
+    # Done in this order for proper legend presentation
     for i in range(0, CARD_LENGTH):
-        labels1.append(f"<b>Column {bingo_ref[i]}</b>")
-        values1.append(df[f'num_bingo_col{i}'].values[0])
+        set_labels_and_values(df, labels1, values1, f"Column {bingo_ref[i]}", f"num_bingo_col{i}")
 
-    labels1.append("<b>Corners</b>")
-    values1.append(df['num_corners_bingo'].values[0])
+    set_labels_and_values(df, labels1, values1, "Corners", "num_corners_bingo")
 
     for i in [1, 2]:
-        labels1.append(f"<b>Diagonal {i}</b>")
-        values1.append(df[f'num_diag{i}_bingo'].values[0])
+        set_labels_and_values(df, labels1, values1, f"Diagonal {i}", f"num_diag{i}_bingo")
 
     for i in range(0, CARD_LENGTH):
-        labels1.append(f"<b>Row {i + 1}</b>")
-        values1.append(df[f'num_bingo_row{i}'].values[0])
+        set_labels_and_values(df, labels1, values1, f"Row {i + 1}", f"num_bingo_row{i}")
 
     # Labels and values for second pie chart
     labels2 = []
     values2 = []
 
-    labels2.append("<b>Columns</b>")
-    values2.append(df['num_col_bingo'].values[0])
+    set_labels_and_values(df, labels2, values2, "Columns", "num_col_bingo")
+    set_labels_and_values(df, labels2, values2, "Corners", "num_corners_bingo")
+    set_labels_and_values(df, labels2, values2, "Diagonals", "num_diag_bingo")
+    set_labels_and_values(df, labels2, values2, "Rows", "num_row_bingo")
 
-    labels2.append("<b>Corners</b>")
-    values2.append(df['num_corners_bingo'].values[0])
+    # 2 pie charts in subplots, as rows or cols
+    if subplot_cols:
+        fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
+    else:
+        fig = make_subplots(rows=2, cols=1, specs=[[{'type': 'domain'}], [{'type': 'domain'}]])
 
-    labels2.append("<b>Diagonals</b>")
-    values2.append(df['num_diag_bingo'].values[0])
+    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown",
+                         textfont=dict(family=FONT_FAMILY2)), 1, 1)
 
-    labels2.append("<b>Rows</b>")
-    values2.append(df['num_row_bingo'].values[0])
+    if subplot_cols:
+        fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
+                             textfont=dict(family=FONT_FAMILY2)), 1, 2)
+    else:
+        fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
+                             textfont=dict(family=FONT_FAMILY2)), 2, 1)
+
+    fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
+                      textposition="auto", hole=.4, direction='clockwise', sort=False,
+                      marker=dict(line=dict(color='#000000', width=5)))
 
     # Border of annotation properties
     bordercolor = "black"
@@ -225,18 +250,7 @@ def plot_bingo_pie(df, plot_offline=True):
     borderpad = 5
     border_bgcolor = "white"
 
-    # 2 pie charts in subplots
-    fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
-
-    fig.add_trace(go.Pie(labels=labels1, values=values1, name="Bingo Low Level Breakdown",
-                         textfont=dict(family=FONT_FAMILY2)), 1, 1)
-    fig.add_trace(go.Pie(labels=labels2, values=values2, name="Bingo High Level Breakdown",
-                         textfont=dict(family=FONT_FAMILY2)), 1, 2)
-
-    fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
-                      textposition="auto", hole=.4, direction='clockwise', sort=False,
-                      marker=dict(line=dict(color='#000000', width=5)))
-
+    # Layout
     fig.update_layout(
         title={'text': 'Detailed type of BINGO win!<br><sup>Number of samples: <i>N={:,}</i></sup>'.format(
             num_simulations),
