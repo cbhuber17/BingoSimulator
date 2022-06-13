@@ -1,0 +1,18 @@
+#graph1 {
+    height: 100vh;
+}
+
+#graph2 {
+    height: 100vh;
+}
+
+@media only screen and (max-device-height: 420px) {
+
+    #graph1 {
+        height: 150vh;
+    }
+
+    #graph2 {
+        height: 170vh;
+    }
+}
