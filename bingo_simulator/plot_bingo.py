@@ -256,8 +256,8 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
     :param: detail (str) One of the following: "subplot_rows", "subplot_cols", "high", "low" (default: "subplot_cols")
             - "subplot_rows" - Plots both the high detail and low detail pie charts in a 2x1 subplot
             - "subplot_cols" - Plots both the high detail and low detail pie chars in a 1x2 subplot
-            - "high" - Plots a single high detail pie chart
-            - "low" - Plots a single low detail pie chart
+            - "large" - Plots a single high detail pie chart
+            - "small" - Plots a single low detail pie chart
     :return: (go.Figure) object"""
 
     # Total number of simulations
@@ -297,7 +297,7 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
     elif detail == "subplot_rows":
         fig, annotations = get_pie_fig_and_annotation(detail, 0.5, 0.82, 0.5, 0.18, font_size)
 
-    elif detail == "high":
+    elif detail == "large":
         fig = go.Figure(data=[go.Pie(labels=labels1, values=values1, textinfo='label+percent')])
         annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", 0.5, 0.5, font_size)]
 
@@ -327,7 +327,7 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
             'xanchor': 'center',
             'yanchor': 'top'}, paper_bgcolor="grey",
         font=dict(
-            family=FONT_FAMILY,
+            family=FONT_FAMILY2,
             size=40,
             color="white"
         ),
@@ -335,7 +335,7 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
         hoverlabel=dict(
             font_size=30,
             bordercolor="black",
-            font=dict(family=FONT_FAMILY, color="White")
+            font=dict(family=FONT_FAMILY2, color="White")
         ),
         annotations=annotations,
         margin=dict(t=170))
