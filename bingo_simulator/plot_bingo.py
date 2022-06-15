@@ -246,6 +246,7 @@ def add_trace(fig, label, value, detail, row, col):
     fig.add_trace(go.Pie(labels=label, values=value, name=f"Bingo {detail} Level Breakdown",
                          textfont=dict(family=FONT_FAMILY2)), row, col)
 
+
 # ------------------------------------------------------------------------------------------------------------------
 
 def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
