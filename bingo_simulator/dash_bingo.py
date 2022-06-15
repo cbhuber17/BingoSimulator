@@ -14,7 +14,6 @@ df = pd.read_csv("bingo_tries_1m.csv")
 df_pie = pd.read_csv("bingo_stats_1m.csv")
 
 num_simulations = df['num_bingo_tries'].sum()
-MOBLILE_SMALL_LENGTH = 430
 
 # Dash HTML layout
 app.layout = html.Div([
@@ -27,25 +26,51 @@ app.layout = html.Div([
         [
             html.H2("Select Level of Detail for Histogram:", style={'display': 'inline-block', 'color': "red"}),
             dcc.RadioItems(["Small", "Medium", "Large"], inline=True,
-                           id="radio_options", labelStyle={'margin-left': '15px'}, style={'display': 'inline-block'})
+                           id="radio_options", value="Large", labelStyle={'margin-left': '15px'},
+                           style={'display': 'inline-block'})
         ], style={'text-align': 'center'}
     ),
     dcc.Graph(id="graph1", mathjax='cdn', responsive='auto'),
     html.Hr(),
+    html.Div([
+        html.H2("Select Level of Detail for Pie:", style={'display': 'inline-block', 'color': "red"}),
+        dcc.RadioItems(["Small", "Large", "Separate"], id="radio_options_pie", value="Large", inline=True,
+                       labelStyle={'margin-left': '15px'}, style={'display': 'inline-block'})],
+                       style={'text-align': 'center'}),
     dcc.Graph(id="graph2", responsive='auto'),
     html.Hr(),
     html.Footer('This page was created using python apps: Plotly and Dash - Content developed by Colin Huber',
                 style={'text-align': 'center'})
 
-], style={'fontFamily': FONT_FAMILY, 'fontSize': 18, 'color': 'white', 'border': '2px solid white',
+], style={'fontFamily': FONT_FAMILY, 'fontSize': 18, 'color': 'white', 'border': '4px solid skyblue',
           'background-color': '#3a3f44'})
+
+
+# ------------------------------------------------------------------------
+
+def get_pie_chart(screen_size):
+    """Returns a pie chart based on the layout desired and current viewport (screen size).
+    :param: screen_size (1-element list with a dictionary of 'height' and 'width') the screen size
+    :return: (go.Figure) object of the pie chart"""
+
+    mobile_small_length = 430
+
+    if screen_size[0]['height'] < mobile_small_length:  # Landscape orientation
+        fig = plot_bingo_pie(df_pie, False, "subplot_cols", 10)
+    elif screen_size[0]['width'] < mobile_small_length:  # Portrait orientation
+        fig = plot_bingo_pie(df_pie, False, "subplot_rows", 10)
+    else:
+        fig = plot_bingo_pie(df_pie, False)
+
+    return fig
 
 
 # ------------------------------------------------------------------------
 
 @app.callback(Output('graph1', 'figure'), [Input('radio_options', 'value')])
 def update_histo(detail_size):
-    """Updates the histogram based on the radio-button detail-size selected.
+    """CALLBACK: Updates the histogram based on the radio-button detail-size selected.
+    TRIGGER: Upon page loading and when selecting the radio options for the histogram plot.
     :param: detail_size (str) The details put in the histogram plot as: 'small', 'medium', or 'large' (default)
     :return: (go.Figure) object to be dynamically updated"""
 
@@ -60,30 +85,38 @@ def update_histo(detail_size):
 
 # ------------------------------------------------------------------------
 
-@app.callback([Output('radio_options', 'value')], [Output('graph2', 'figure')],
-              [Input('viewport-container', 'data')])
-def get_viewport(screen_size):
+@app.callback(Output('graph2', 'figure'), [Input('radio_options_pie', 'value'), [Input('viewport-container', 'data')]])
+def update_pie(detail_size, screen_size):
+    """CALLBACK: Updates the pie chart based on the radio-button detail-size selected.
+    TRIGGER: Upon page loading and when selecting the radio options for the pie plot.
+    :param: detail_size (str) The details put in the histogram plot as: 'small' or 'large' (default)
+    :param: screen_size (1-element list with a dictionary of 'height' and 'width') the screen size
+    :return: (go.Figure) object to be dynamically updated"""
 
-    # TODO: Add a radio button for pie to switch between "High" and "Low".
-    if screen_size['height'] < MOBLILE_SMALL_LENGTH:    # Landscape orientation
-        pie = plot_bingo_pie(df_pie, False, "subplot_cols", 10)
-    elif screen_size['width'] < MOBLILE_SMALL_LENGTH:   # Portrait orientation
-        pie = plot_bingo_pie(df_pie, False, "subplot_rows", 10)
+    if detail_size is None:
+        raise PreventUpdate
+
+    # Two pie charts
+    if detail_size == "Separate":
+        fig = get_pie_chart(screen_size)
+
+    # Single pie chart
     else:
-        pie = plot_bingo_pie(df_pie, False)
+        fig = plot_bingo_pie(df_pie, False, detail_size.lower())
 
-    # Return default graph detail size for the histogram plot, and the desired pie plot
-    return "Large", pie
+    fig.update_layout(transition_duration=1000)
+
+    return fig
 
 
 # ------------------------------------------------------------------------
 
-"""A client callback to execute JS in a browser session to get the screen width and height.
+"""CALLBACK: A client callback to execute JS in a browser session to get the screen width and height.
+TRIGGER: Upon page loading.
 Results are put in the Store() viewport-container data property."""
 app.clientside_callback(
     """
     function(href) {
-        var timestamp = new Date()
         var w = screen.width;
         var h = screen.height;
         return {'height': h, 'width': w};
@@ -95,4 +128,3 @@ app.clientside_callback(
 
 if __name__ == '__main__':
     app.run_server()
-
