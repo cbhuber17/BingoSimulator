@@ -59,7 +59,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
                   'paper_bgcolor': ('white', 'black'),
                   'plot_bgcolor': (pc.qualitative.Pastel1[1], 'black'),
                   'hover_text': ('black', 'white'),
-                  'an_bgcolor': ('white', 'white'),
+                  'an_bgcolor': ('#FFFFE0', 'white'),
                   'an_text_color': ('black', 'navy'),
                   'marker_line_color': ('black', 'white'),
                   'color_discrete_sequence': (pc.qualitative.Alphabet, pc.qualitative.Light24)}
@@ -80,13 +80,13 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
     y_gauss_curve = gauss_curve(df.index, *curve_param)
 
     # Get bar graph (stacked) objects
-    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', color_mode['color_discrete_sequence'][dark_mode][0], color_mode['marker_line_color'][dark_mode])
+    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', pc.qualitative.Plotly[0], color_mode['marker_line_color'][dark_mode])
 
     # Done in this order for proper legend presentation
-    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows', color_mode['color_discrete_sequence'][dark_mode][1], color_mode['marker_line_color'][dark_mode])
-    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns', color_mode['color_discrete_sequence'][dark_mode][2], color_mode['marker_line_color'][dark_mode])
-    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals', color_mode['color_discrete_sequence'][dark_mode][3], color_mode['marker_line_color'][dark_mode])
-    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners', color_mode['color_discrete_sequence'][dark_mode][13], color_mode['marker_line_color'][dark_mode])
+    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows', pc.qualitative.Plotly[0], color_mode['marker_line_color'][dark_mode])
+    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns', pc.qualitative.Plotly[1], color_mode['marker_line_color'][dark_mode])
+    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals', pc.qualitative.Plotly[2], color_mode['marker_line_color'][dark_mode])
+    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners', pc.qualitative.Plotly[3], color_mode['marker_line_color'][dark_mode])
 
     data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1', color_mode['color_discrete_sequence'][dark_mode][1], color_mode['marker_line_color'][dark_mode])
     data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2', color_mode['color_discrete_sequence'][dark_mode][2], color_mode['marker_line_color'][dark_mode])
