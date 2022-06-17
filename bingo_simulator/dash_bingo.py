@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output
 from plot_bingo import plot_bingo_histo, plot_bingo_pie, FONT_FAMILY
 from dash.exceptions import PreventUpdate
 
-app = dash.Dash(assets_folder='assets')
+app = dash.Dash(__name__, assets_folder='assets')
 
 # df = pd.read_csv(bingo_simulator_main.STATS_TRIES_FILENAME)
 # df_pie = pd.read_csv(bingo_simulator_main.BINGO_STATS_FILENAME)
@@ -39,7 +39,12 @@ app.layout = html.Div([
                        style={'text-align': 'center'}),
     dcc.Graph(id="graph2", responsive='auto'),
     html.Hr(),
-    html.Footer('This page was created using python apps: Plotly and Dash - Content developed by Colin Huber',
+    html.Footer([html.Div(['This page was created using python apps: Plotly and Dash - Content developed by Colin Huber'],
+                          style={'font-size': '30px'}),
+                html.Div(['Contact:'], style={'text-decoration': 'underline', 'color': 'skyblue'}),
+                 html.A([html.Img(src='assets/fb.png')],  href='https://www.facebook.com/cbhuber/'),
+                 html.A([html.Img(src='assets/li.png', style={'margin-left': '10px'})],
+                        href='https://www.linkedin.com/in/cbhuber/')],
                 style={'text-align': 'center'})
 
 ], style={'fontFamily': FONT_FAMILY, 'fontSize': 18, 'color': 'white', 'border': '4px solid skyblue',
