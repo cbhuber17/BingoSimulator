@@ -3,6 +3,7 @@
 import plotly.offline as pyo
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+import plotly.colors as pc
 import numpy as np
 from scipy.optimize import curve_fit
 from bingo_card import CARD_LENGTH
@@ -29,24 +30,39 @@ def gauss_curve(x, a, x0, sigma):
 
 # ------------------------------------------------------------------------
 
-def get_bar_object(df, df_name, name):
+def get_bar_object(df, df_name, name, marker_color, marker_line_color):
     """Returns a bar object to be plotted.
     :param: df (pd.DataFrame) A data frame of bingo stats
     :param: df_name (str) The key to access a specific column in the df to be plotted
     :param: name (str) The name of the series to be put on the legend in the plot
     :return: (go.Bar) object"""
-    return go.Bar(x=df.index, y=df[df_name], name=name, marker_line=dict(width=1, color='white'))
+    return go.Bar(x=df.index, y=df[df_name], name=name, opacity=1,
+                  marker=dict(color=marker_color),
+                  marker_line=dict(width=1, color=marker_line_color))
 
 
 # ------------------------------------------------------------------------
 
 
-def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
+def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True):
     """Plots the BINGO histogram.
     :param: df (pandas.df) DataFrame containing number of tries for each BINGO win
     :param: detail_size (str) The details put in the histogram plot as: 'small', 'medium', or 'large' (default)
     :param: plot_offline (bool) If an offline plot is to be generated (default: True)
+    :param: dark_mode (bool) If dark mode plotting is done (True), light mode plotting (False)
     :return: (go.Figure) object"""
+
+    # Color mode dictionary, each key contains a tuple that is the color to use when dark_mode is False/True
+    # E.g. color_mode['title'][True] will provide 'orange', otherwise 'black'.
+    color_mode = {'title': ('black', 'orange'),
+                  'axes': ('black', 'yellow'),
+                  'paper_bgcolor': ('white', 'black'),
+                  'plot_bgcolor': (pc.qualitative.Pastel1[1], 'black'),
+                  'hover_text': ('black', 'white'),
+                  'an_bgcolor': ('white', 'white'),
+                  'an_text_color': ('black', 'navy'),
+                  'marker_line_color': ('black', 'white'),
+                  'color_discrete_sequence': (pc.qualitative.Alphabet, pc.qualitative.Light24)}
 
     # Preliminary stats and estimates are required to generate a bell curve
     num_simulations = sum(df['num_bingo_tries'])
@@ -64,28 +80,28 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     y_gauss_curve = gauss_curve(df.index, *curve_param)
 
     # Get bar graph (stacked) objects
-    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency')
+    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', color_mode['color_discrete_sequence'][dark_mode][0], color_mode['marker_line_color'][dark_mode])
 
     # Done in this order for proper legend presentation
-    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows')
-    data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1')
-    data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2')
-    data_row2 = get_bar_object(df, 'num_tries_row2', 'Row 3')
-    data_row3 = get_bar_object(df, 'num_tries_row3', 'Row 4')
-    data_row4 = get_bar_object(df, 'num_tries_row4', 'Row 5')
+    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows', color_mode['color_discrete_sequence'][dark_mode][1], color_mode['marker_line_color'][dark_mode])
+    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns', color_mode['color_discrete_sequence'][dark_mode][2], color_mode['marker_line_color'][dark_mode])
+    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals', color_mode['color_discrete_sequence'][dark_mode][3], color_mode['marker_line_color'][dark_mode])
+    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners', color_mode['color_discrete_sequence'][dark_mode][13], color_mode['marker_line_color'][dark_mode])
 
-    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns')
-    data_col0 = get_bar_object(df, 'num_tries_col0', 'Column B')
-    data_col1 = get_bar_object(df, 'num_tries_col1', 'Column I')
-    data_col2 = get_bar_object(df, 'num_tries_col2', 'Column N')
-    data_col3 = get_bar_object(df, 'num_tries_col3', 'Column G')
-    data_col4 = get_bar_object(df, 'num_tries_col4', 'Column O')
+    data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1', color_mode['color_discrete_sequence'][dark_mode][1], color_mode['marker_line_color'][dark_mode])
+    data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2', color_mode['color_discrete_sequence'][dark_mode][2], color_mode['marker_line_color'][dark_mode])
+    data_row2 = get_bar_object(df, 'num_tries_row2', 'Row 3', color_mode['color_discrete_sequence'][dark_mode][3], color_mode['marker_line_color'][dark_mode])
+    data_row3 = get_bar_object(df, 'num_tries_row3', 'Row 4', color_mode['color_discrete_sequence'][dark_mode][4], color_mode['marker_line_color'][dark_mode])
+    data_row4 = get_bar_object(df, 'num_tries_row4', 'Row 5', color_mode['color_discrete_sequence'][dark_mode][5], color_mode['marker_line_color'][dark_mode])
 
-    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals')
-    data_diag1 = get_bar_object(df, 'num_tries_diag1', 'Diagonal 1')
-    data_diag2 = get_bar_object(df, 'num_tries_diag2', 'Diagonal 2')
+    data_col0 = get_bar_object(df, 'num_tries_col0', 'Column B', color_mode['color_discrete_sequence'][dark_mode][6], color_mode['marker_line_color'][dark_mode])
+    data_col1 = get_bar_object(df, 'num_tries_col1', 'Column I', color_mode['color_discrete_sequence'][dark_mode][7], color_mode['marker_line_color'][dark_mode])
+    data_col2 = get_bar_object(df, 'num_tries_col2', 'Column N', color_mode['color_discrete_sequence'][dark_mode][8], color_mode['marker_line_color'][dark_mode])
+    data_col3 = get_bar_object(df, 'num_tries_col3', 'Column G', color_mode['color_discrete_sequence'][dark_mode][9], color_mode['marker_line_color'][dark_mode])
+    data_col4 = get_bar_object(df, 'num_tries_col4', 'Column O', color_mode['color_discrete_sequence'][dark_mode][10], color_mode['marker_line_color'][dark_mode])
 
-    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners')
+    data_diag1 = get_bar_object(df, 'num_tries_diag1', 'Diagonal 1', color_mode['color_discrete_sequence'][dark_mode][11], color_mode['marker_line_color'][dark_mode])
+    data_diag2 = get_bar_object(df, 'num_tries_diag2', 'Diagonal 2', color_mode['color_discrete_sequence'][dark_mode][12], color_mode['marker_line_color'][dark_mode])
 
     # Small data is simply num BINGO wins
     # Medium data is details of BINGO wins (rows, cols, diagonals, corners), but not specific like row0, col1, etc.
@@ -109,7 +125,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
             'y': 0.95,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': dict(color='orange')
+            'font': dict(color=color_mode['title'][dark_mode])
         },
         barmode="stack",
         xaxis_title={'text': "Number of bingo balls"},
@@ -118,15 +134,15 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
         font=dict(
             family=FONT_FAMILY,
             size=30,
-            color="yellow"
+            color=color_mode['axes'][dark_mode]
         ),
-        paper_bgcolor='black',
-        plot_bgcolor='black',
+        paper_bgcolor=color_mode['paper_bgcolor'][dark_mode],
+        plot_bgcolor=color_mode['plot_bgcolor'][dark_mode],
         spikedistance=1000,
         hoverdistance=100,
         hoverlabel=dict(
             font_size=16,
-            font=dict(color="White",
+            font=dict(color=color_mode['hover_text'][dark_mode],
                       family=FONT_FAMILY)
 
         ))
@@ -152,7 +168,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     bordercolor = "red"
     borderwidth = 3
     borderpad = 35
-    border_bgcolor = "white"
+    bgcolor = color_mode['an_bgcolor'][dark_mode]
 
     # Create figure
     fig = go.Figure(data=data_selector[detail_size], layout=layout)
@@ -162,8 +178,8 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True):
     # Arrow annotation of the equation of the curve
     fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=equation_to_show, showarrow=True,
                        arrowhead=arrowhead, arrowsize=arrowsize, arrowwidth=arrowwidth, arrowcolor=arrowcolor,
-                       bordercolor=bordercolor, borderpad=borderpad, borderwidth=borderwidth, bgcolor=border_bgcolor,
-                       ax=x_arrow_vector, ay=y_arrow_vector, font=dict(color="navy"))
+                       bordercolor=bordercolor, borderpad=borderpad, borderwidth=borderwidth, bgcolor=bgcolor,
+                       ax=x_arrow_vector, ay=y_arrow_vector, font=dict(color=color_mode['an_text_color'][dark_mode]))
 
     if plot_offline:
         pyo.plot(fig, filename=HTML_HISTO_FILE, include_mathjax='cdn', config={'responsive': True})

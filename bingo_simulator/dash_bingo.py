@@ -1,6 +1,7 @@
 import dash
 from dash import dcc
 from dash import html
+import dash_daq as daq
 import pandas as pd
 from dash.dependencies import Input, Output
 from plot_bingo import plot_bingo_histo, plot_bingo_pie, FONT_FAMILY
@@ -22,6 +23,7 @@ app.layout = html.Div([
         [html.H1("BINGO Simulator! Statistics on the BINGO game played {:,} times!".format(num_simulations))],
         style={'text-align': 'center', 'text-decoration': 'underline'}
     ),
+    html.Div([daq.ToggleSwitch(id='dark-mode-switch', label='View Page in Dark Mode', value=True)]),
     html.Div(
         [
             html.H2("Select Level of Detail for Histogram:", style={'display': 'inline-block', 'color': "red"}),
@@ -45,7 +47,7 @@ app.layout = html.Div([
                  html.A([html.Img(src='assets/fb.png')],  href='https://www.facebook.com/cbhuber/'),
                  html.A([html.Img(src='assets/li.png', style={'margin-left': '10px'})],
                         href='https://www.linkedin.com/in/cbhuber/')],
-                style={'text-align': 'center'})
+                style={'text-align': 'center'})  # TODO: MIT license
 
 ], style={'fontFamily': FONT_FAMILY, 'fontSize': 18, 'color': 'white', 'border': '4px solid skyblue',
           'background-color': '#3a3f44'})
@@ -72,17 +74,18 @@ def get_pie_chart(screen_size):
 
 # ------------------------------------------------------------------------
 
-@app.callback(Output('graph1', 'figure'), [Input('radio_options', 'value')])
-def update_histo(detail_size):
+@app.callback(Output('graph1', 'figure'), [Input('radio_options', 'value'), Input('dark-mode-switch', 'value')])
+def update_histo(detail_size, dark_mode):
     """CALLBACK: Updates the histogram based on the radio-button detail-size selected.
     TRIGGER: Upon page loading and when selecting the radio options for the histogram plot.
     :param: detail_size (str) The details put in the histogram plot as: 'small', 'medium', or 'large' (default)
+    :param: dark_mode (bool) Whether the plot is done in dark mode or not
     :return: (go.Figure) object to be dynamically updated"""
 
     if detail_size is None:
         raise PreventUpdate
 
-    fig = plot_bingo_histo(df, detail_size, False)
+    fig = plot_bingo_histo(df, detail_size, False, dark_mode)
 
     fig.update_layout(transition_duration=500)
     return fig
