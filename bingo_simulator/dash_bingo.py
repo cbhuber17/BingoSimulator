@@ -11,6 +11,8 @@ from dash.exceptions import PreventUpdate
 
 app = dash.Dash(__name__, assets_folder='assets')
 
+server = app.server
+
 # df = pd.read_csv(bingo_simulator_main.STATS_TRIES_FILENAME)
 # df_pie = pd.read_csv(bingo_simulator_main.BINGO_STATS_FILENAME)
 df = pd.read_csv("bingo_tries_1m.csv")
