@@ -180,4 +180,4 @@ if __name__ == '__main__':
 
     # Plot results in histogram and pie chart
     pb.plot_bingo_histo(bingo_game_sim.stats.df_tries, dark_mode=True)
-    pb.plot_bingo_pie(bingo_game_sim.stats.df_num_bingo, detail="subplot_cols")
+    pb.plot_bingo_pie(bingo_game_sim.stats.df_num_bingo, detail="subplot_cols", dark_mode=True)

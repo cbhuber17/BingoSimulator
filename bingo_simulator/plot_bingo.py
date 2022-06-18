@@ -25,6 +25,7 @@ def gauss_curve(x, a, x0, sigma):
     :param: x0 (float) The x-coordinate mean of the histogram
     :param: sigma (float) The 1-standard deviation of the bell curve
     :return: (float), the y-value of the gauss-curve: a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))"""
+
     return a * np.exp(-(x - x0) ** 2 / (2 * sigma ** 2))
 
 
@@ -35,7 +36,10 @@ def get_bar_object(df, df_name, name, marker_color, marker_line_color):
     :param: df (pd.DataFrame) A data frame of bingo stats
     :param: df_name (str) The key to access a specific column in the df to be plotted
     :param: name (str) The name of the series to be put on the legend in the plot
+    :param: marker_color (str) The color of the bars
+    :param: marker_line_color (str) The color of the border of the bars
     :return: (go.Bar) object"""
+
     return go.Bar(x=df.index, y=df[df_name], name=name, opacity=1,
                   marker=dict(color=marker_color),
                   marker_line=dict(width=1, color=marker_line_color))
@@ -80,28 +84,47 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
     y_gauss_curve = gauss_curve(df.index, *curve_param)
 
     # Get bar graph (stacked) objects
-    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', pc.qualitative.Plotly[0], color_mode['marker_line_color'][dark_mode])
+    data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', pc.qualitative.Plotly[0],
+                                color_mode['marker_line_color'][dark_mode])
 
     # Done in this order for proper legend presentation
-    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows', pc.qualitative.Plotly[0], color_mode['marker_line_color'][dark_mode])
-    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns', pc.qualitative.Plotly[1], color_mode['marker_line_color'][dark_mode])
-    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals', pc.qualitative.Plotly[2], color_mode['marker_line_color'][dark_mode])
-    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners', pc.qualitative.Plotly[3], color_mode['marker_line_color'][dark_mode])
+    data_rows = get_bar_object(df, 'num_tries_rows', 'Rows', pc.qualitative.Plotly[0],
+                               color_mode['marker_line_color'][dark_mode])
+    data_cols = get_bar_object(df, 'num_tries_cols', 'Columns', pc.qualitative.Plotly[1],
+                               color_mode['marker_line_color'][dark_mode])
+    data_diag = get_bar_object(df, 'num_tries_diag', 'Diagonals', pc.qualitative.Plotly[2],
+                               color_mode['marker_line_color'][dark_mode])
+    data_corners = get_bar_object(df, 'num_tries_corners', 'Corners', pc.qualitative.Plotly[3],
+                                  color_mode['marker_line_color'][dark_mode])
 
-    data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1', color_mode['color_discrete_sequence'][dark_mode][1], color_mode['marker_line_color'][dark_mode])
-    data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2', color_mode['color_discrete_sequence'][dark_mode][2], color_mode['marker_line_color'][dark_mode])
-    data_row2 = get_bar_object(df, 'num_tries_row2', 'Row 3', color_mode['color_discrete_sequence'][dark_mode][3], color_mode['marker_line_color'][dark_mode])
-    data_row3 = get_bar_object(df, 'num_tries_row3', 'Row 4', color_mode['color_discrete_sequence'][dark_mode][4], color_mode['marker_line_color'][dark_mode])
-    data_row4 = get_bar_object(df, 'num_tries_row4', 'Row 5', color_mode['color_discrete_sequence'][dark_mode][5], color_mode['marker_line_color'][dark_mode])
+    data_row0 = get_bar_object(df, 'num_tries_row0', 'Row 1', color_mode['color_discrete_sequence'][dark_mode][1],
+                               color_mode['marker_line_color'][dark_mode])
+    data_row1 = get_bar_object(df, 'num_tries_row1', 'Row 2', color_mode['color_discrete_sequence'][dark_mode][2],
+                               color_mode['marker_line_color'][dark_mode])
+    data_row2 = get_bar_object(df, 'num_tries_row2', 'Row 3', color_mode['color_discrete_sequence'][dark_mode][3],
+                               color_mode['marker_line_color'][dark_mode])
+    data_row3 = get_bar_object(df, 'num_tries_row3', 'Row 4', color_mode['color_discrete_sequence'][dark_mode][4],
+                               color_mode['marker_line_color'][dark_mode])
+    data_row4 = get_bar_object(df, 'num_tries_row4', 'Row 5', color_mode['color_discrete_sequence'][dark_mode][5],
+                               color_mode['marker_line_color'][dark_mode])
 
-    data_col0 = get_bar_object(df, 'num_tries_col0', 'Column B', color_mode['color_discrete_sequence'][dark_mode][6], color_mode['marker_line_color'][dark_mode])
-    data_col1 = get_bar_object(df, 'num_tries_col1', 'Column I', color_mode['color_discrete_sequence'][dark_mode][7], color_mode['marker_line_color'][dark_mode])
-    data_col2 = get_bar_object(df, 'num_tries_col2', 'Column N', color_mode['color_discrete_sequence'][dark_mode][8], color_mode['marker_line_color'][dark_mode])
-    data_col3 = get_bar_object(df, 'num_tries_col3', 'Column G', color_mode['color_discrete_sequence'][dark_mode][9], color_mode['marker_line_color'][dark_mode])
-    data_col4 = get_bar_object(df, 'num_tries_col4', 'Column O', color_mode['color_discrete_sequence'][dark_mode][10], color_mode['marker_line_color'][dark_mode])
+    data_col0 = get_bar_object(df, 'num_tries_col0', 'Column B', color_mode['color_discrete_sequence'][dark_mode][6],
+                               color_mode['marker_line_color'][dark_mode])
+    data_col1 = get_bar_object(df, 'num_tries_col1', 'Column I', color_mode['color_discrete_sequence'][dark_mode][7],
+                               color_mode['marker_line_color'][dark_mode])
+    data_col2 = get_bar_object(df, 'num_tries_col2', 'Column N', color_mode['color_discrete_sequence'][dark_mode][8],
+                               color_mode['marker_line_color'][dark_mode])
+    data_col3 = get_bar_object(df, 'num_tries_col3', 'Column G', color_mode['color_discrete_sequence'][dark_mode][9],
+                               color_mode['marker_line_color'][dark_mode])
+    data_col4 = get_bar_object(df, 'num_tries_col4', 'Column O', color_mode['color_discrete_sequence'][dark_mode][10],
+                               color_mode['marker_line_color'][dark_mode])
 
-    data_diag1 = get_bar_object(df, 'num_tries_diag1', 'Diagonal 1', color_mode['color_discrete_sequence'][dark_mode][11], color_mode['marker_line_color'][dark_mode])
-    data_diag2 = get_bar_object(df, 'num_tries_diag2', 'Diagonal 2', color_mode['color_discrete_sequence'][dark_mode][12], color_mode['marker_line_color'][dark_mode])
+    data_diag1 = get_bar_object(df, 'num_tries_diag1', 'Diagonal 1',
+                                color_mode['color_discrete_sequence'][dark_mode][11],
+                                color_mode['marker_line_color'][dark_mode])
+    data_diag2 = get_bar_object(df, 'num_tries_diag2', 'Diagonal 2',
+                                color_mode['color_discrete_sequence'][dark_mode][12],
+                                color_mode['marker_line_color'][dark_mode])
 
     # Small data is simply num BINGO wins
     # Medium data is details of BINGO wins (rows, cols, diagonals, corners), but not specific like row0, col1, etc.
@@ -147,7 +170,7 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
 
         ))
 
-    # LaTeX format to show the model equation and stat values
+    # LaTeX/MathJax format to show the model equation and stat values
     model_equation = r"$\normalsize{\alpha * e^{{{ - ( {x - \mu } )^2 } / {2\sigma ^2 }}}}$"
     model_results = r"$\alpha={:.0f}\\\mu={:.1f}\\\sigma={:.1f}$".format(curve_a, curve_mean, curve_std)
     equation_to_show = r'$\displaylines{' + model_equation[1:-1] + r"\\" + model_results[1:-1] + r'}$'
@@ -204,28 +227,31 @@ def set_labels_and_values(df, label, value, label_str, value_key):
 
 # ------------------------------------------------------------------------------------------------------------------
 
-def get_pie_annotation_dict(text, x, y, font_size):
+def get_pie_annotation_dict(text, x, y, font_size, color_mode, dark_mode):
     """Returns a dictionary of annotations to use with the pie chart.
     :param: text (str) Text to annotate with
     :param: x (int) The x-coordinate of the annotation on the plot
     :param: y (int) The y-coordinate of the annotation on the plot
     :param: font_size (int) The size of the font in the annotation
+    :param: color_mode (dict) Colors containing a key and tuple dictionary for (light/False, dark/True)
+    :param: dark_mode (bool) If dark mode plotting is done (True), light mode plotting (False)
     :return: (dict) a dictionary filled with annotation properties that is common among the pie charts."""
 
     # Border of annotation properties
-    bordercolor = "black"
+    bordercolor = 'black'
     borderwidth = 3
     borderpad = 5
-    border_bgcolor = "white"
+    border_bgcolor = color_mode['an_bgcolor'][dark_mode]
 
     return dict(text=f'<b>{text}</b>', x=x, y=y, font_size=font_size, font_color="black",
                 font_family=FONT_FAMILY2, showarrow=False, borderwidth=borderwidth,
-                borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor)
+                borderpad=borderpad, bgcolor=border_bgcolor, bordercolor=bordercolor,
+                font=dict(color=color_mode['an_text_color'][dark_mode]))
 
 
 # ------------------------------------------------------------------------------------------------------------------
 
-def get_pie_fig_and_annotation(detail, x1, y1, x2, y2, font_size):
+def get_pie_fig_and_annotation(detail, x1, y1, x2, y2, font_size, color_mode, dark_mode):
     """Returns the fig and annotation objects to use in the pie charts.
     :param: detail (str) either as "subplot_cols" or "subplot_rows"
     :param: x1 (int) The x-coordinate of the first annotation on the plot
@@ -233,6 +259,8 @@ def get_pie_fig_and_annotation(detail, x1, y1, x2, y2, font_size):
     :param: x2 (int) The x-coordinate of the second annotation on the plot
     :param: y2 (int) The y-coordinate of the second annotation on the plot
     :param: font_size (int) The size of the font in the annotation
+    :param: color_mode (dict) Colors containing a key and tuple dictionary for (light/False, dark/True)
+    :param: dark_mode (bool) If dark mode plotting is done (True), light mode plotting (False)
     :return: fig (go.Figure) and annotation (dict)"""
 
     spec = {'type': 'domain'}
@@ -243,8 +271,8 @@ def get_pie_fig_and_annotation(detail, x1, y1, x2, y2, font_size):
     else:
         fig = make_subplots(rows=2, cols=1, specs=[[spec], [spec]])
 
-    annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", x1, y1, font_size),
-                   get_pie_annotation_dict("High Level<br>Breakdown", x2, y2, font_size)]
+    annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", x1, y1, font_size, color_mode, dark_mode),
+                   get_pie_annotation_dict("High Level<br>Breakdown", x2, y2, font_size, color_mode, dark_mode)]
 
     return fig, annotations
 
@@ -265,7 +293,7 @@ def add_trace(fig, label, value, detail, row, col):
 
 # ------------------------------------------------------------------------------------------------------------------
 
-def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
+def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20, dark_mode=True):
     """Plots the BINGO pie charts.
     :param: df (pandas.df) DataFrame containing number of tries for each BINGO win
     :param: plot_offline (bool) If an offline plot is to be generated (default: True)
@@ -274,12 +302,22 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
             - "subplot_cols" - Plots both the high detail and low detail pie chars in a 1x2 subplot
             - "large" - Plots a single high detail pie chart
             - "small" - Plots a single low detail pie chart
+    :param: dark_mode (bool) If dark mode plotting is done (True), light mode plotting (False)
     :return: (go.Figure) object"""
 
     # Total number of simulations
     num_simulations = int(df['num_line_bingo'].values + df['num_diag_bingo'].values + df['num_corners_bingo'].values)
 
     bingo_ref = {0: 'B', 1: 'I', 2: 'N', 3: 'G', 4: 'O'}
+
+    # Color mode dictionary, each key contains a tuple that is the color to use when dark_mode is False/True
+    # E.g. color_mode['title'][True] will provide 'white', otherwise 'black'.
+    color_mode = {'title': ('black', 'white'),
+                  'pie_lines': ('black', 'white'),
+                  'paper_bgcolor': (pc.qualitative.Pastel1[1], '#606060'),
+                  'hover_text': ('black', 'white'),
+                  'an_bgcolor': ('#FFFFE0', 'white'),
+                  'an_text_color': ('black', 'navy')}
 
     # Labels and values for first pie chart
     labels1 = []
@@ -308,18 +346,18 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
 
     # 2 pie charts in subplots, as rows or cols, or single plot as high or low details
     if detail == "subplot_cols":
-        fig, annotations = get_pie_fig_and_annotation(detail, 0.18, 0.5, 0.82, 0.5, font_size)
+        fig, annotations = get_pie_fig_and_annotation(detail, 0.18, 0.5, 0.82, 0.5, font_size, color_mode, dark_mode)
 
     elif detail == "subplot_rows":
-        fig, annotations = get_pie_fig_and_annotation(detail, 0.5, 0.82, 0.5, 0.18, font_size)
+        fig, annotations = get_pie_fig_and_annotation(detail, 0.5, 0.82, 0.5, 0.18, font_size, color_mode, dark_mode)
 
     elif detail == "large":
         fig = go.Figure(data=[go.Pie(labels=labels1, values=values1, textinfo='label+percent')])
-        annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", 0.5, 0.5, font_size)]
+        annotations = [get_pie_annotation_dict("Detailed<br>Breakdown", 0.5, 0.5, font_size, color_mode, dark_mode)]
 
     else:
         fig = go.Figure(data=[go.Pie(labels=labels2, values=values2, textinfo='label+percent')])
-        annotations = [get_pie_annotation_dict("High Level<br>Breakdown", 0.5, 0.5, font_size)]
+        annotations = [get_pie_annotation_dict("High Level<br>Breakdown", 0.5, 0.5, font_size, color_mode, dark_mode)]
 
     if detail == "subplot_cols" or detail == "subplot_rows":
         add_trace(fig, labels1, values1, "Low", 1, 1)
@@ -332,7 +370,7 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
 
     fig.update_traces(hovertemplate='%{value} samples<extra></extra>', textinfo='label+percent', textfont_size=20,
                       textposition="auto", hole=.4, direction='clockwise', sort=False,
-                      marker=dict(line=dict(color='#000000', width=5)))
+                      marker=dict(line=dict(color=color_mode['pie_lines'][dark_mode], width=5)))
 
     # Layout
     fig.update_layout(
@@ -341,17 +379,17 @@ def plot_bingo_pie(df, plot_offline=True, detail="subplot_cols", font_size=20):
             'x': 0.5,
             'y': 0.95,
             'xanchor': 'center',
-            'yanchor': 'top'}, paper_bgcolor="grey",
+            'yanchor': 'top',
+            'font': dict(color=color_mode['title'][dark_mode])}, paper_bgcolor=color_mode['paper_bgcolor'][dark_mode],
         font=dict(
             family=FONT_FAMILY2,
             size=40,
-            color="white"
         ),
         showlegend=False,
         hoverlabel=dict(
             font_size=30,
             bordercolor="black",
-            font=dict(family=FONT_FAMILY2, color="White")
+            font=dict(family=FONT_FAMILY2, color=color_mode['hover_text'][dark_mode])
         ),
         annotations=annotations,
         margin=dict(t=170))
