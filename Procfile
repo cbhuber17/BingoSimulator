@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath bingo_simulator dash_bingo:server
