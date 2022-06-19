@@ -139,7 +139,7 @@ The server will start at [http://127.0.0.1:8050/](http://127.0.0.1:8050/)
 
 ## Heroku Deployment
 
-The app is located at: TBD
+The app is located at: https://dashboard.heroku.com/apps/bingo-simulator
 
 ## Testing
 
