@@ -168,7 +168,7 @@ class BingoSimulator:
 if __name__ == '__main__':
     from bingo_simulator import plot_bingo as pb
 
-    num_simulations = 1000
+    num_simulations = 10000000
 
     bingo_game_sim = BingoSimulator(num_simulations)
     bingo_game_sim.play_bingo(False)

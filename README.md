@@ -112,7 +112,7 @@ Create a folder on your PC to host the project files.  Navigate to the root fold
 Create the virtual environment in hte root folder by running the following command:
 
 ```
-python -m virtualenv bingo_env
+python -m venv bingo_env
 ```
 
 For Windows, this means going into the ```bingo_env\Scripts``` folder(by using the ```cd``` command in ```cmd.exe```) and running ```activate``` via command prompt.  Now this command prompt has ```(bingo_env)``` in it and is the virtual environment for this project, only containing the dependencies required for it (i.e. those from [requirements.txt](requirements.txt)).

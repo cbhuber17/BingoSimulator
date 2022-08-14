@@ -15,49 +15,80 @@ server = app.server
 
 # df = pd.read_csv(bingo_simulator_main.STATS_TRIES_FILENAME)
 # df_pie = pd.read_csv(bingo_simulator_main.BINGO_STATS_FILENAME)
-df = pd.read_csv("bingo_tries_1m.csv")
-df_pie = pd.read_csv("bingo_stats_1m.csv")
+df = pd.read_csv("bingo_tries_10m.csv")
+df_pie = pd.read_csv("bingo_stats_10m.csv")
 
-num_simulations = df['num_bingo_tries'].sum()
+NUM_SIMULATIONS = df['num_bingo_tries'].sum()
 
 # Dash HTML layout
-app.layout = html.Div([
-    dcc.Location(id='url'), dcc.Store(id='viewport-container', data={}, storage_type='session'),
-    html.Header(
-        [html.H1("BINGO Simulator! Statistics on the BINGO game played {:,} times!".format(num_simulations))],
-        style={'text-align': 'center', 'text-decoration': 'underline'}
+app.layout = html.Div(
+    [
+        dcc.Location(id='url'),
+        dcc.Store(id='viewport-container', data={}, storage_type='session'),
+        html.Header(
+            [
+                html.H1("BINGO Simulator! Statistics on the BINGO game played {:,} times!".format(NUM_SIMULATIONS)),
+            ], style={'text-align': 'center', 'text-decoration': 'underline'}
     ),
-    html.Div([daq.ToggleSwitch(id='dark-mode-switch', label=dict(label='View Page in Dark Mode:',
-                                                                 style={'font-size': '20px'}),
-                               value=True, size=50, color='skyblue')]),
+    html.Div(
+        [
+            daq.ToggleSwitch(id='dark-mode-switch',
+                             label=dict(label='View Page in Dark Mode:', style={'font-size': '20px'}),
+                             value=True,
+                             size=50,
+                             color='skyblue')
+        ]
+    ),
     html.Div(
         [
             html.H2("Select Level of Detail for Histogram:", style={'display': 'inline-block', 'color': "red"}),
-            dcc.RadioItems(["Small", "Medium", "Large"], inline=True,
-                           id="radio_options", value="Large", labelStyle={'margin-left': '15px'},
-                           style={'display': 'inline-block'})
+            dcc.RadioItems(
+                ["Small", "Medium", "Large"],
+                inline=True,
+                id="radio_options",
+                value="Large",
+                labelStyle={'margin-left': '15px'},
+                style={'display': 'inline-block'}
+            )
         ], style={'text-align': 'center'}
     ),
     dcc.Graph(id="graph1", mathjax='cdn', responsive='auto'),
     html.Hr(),
-    html.Div([
-        html.H2("Select Level of Detail for Pie:", style={'display': 'inline-block', 'color': "red"}),
-        dcc.RadioItems(["Small", "Large", "Separate"], id="radio_options_pie", value="Large", inline=True,
-                       labelStyle={'margin-left': '15px'}, style={'display': 'inline-block'})],
-        style={'text-align': 'center'}),
+    html.Div(
+        [
+            html.H2("Select Level of Detail for Pie:", style={'display': 'inline-block', 'color': "red"}),
+            dcc.RadioItems(
+                ["Small", "Large", "Separate"],
+                id="radio_options_pie",
+                value="Large",
+                inline=True,
+                labelStyle={'margin-left': '15px'},
+                style={'display': 'inline-block'})
+        ], style={'text-align': 'center'}),
     dcc.Graph(id="graph2", responsive='auto'),
     html.Hr(),
     html.Footer(
-        [html.Div(['This page was created using python apps: Plotly and Dash - Content developed by Colin Huber'],
-                  style={'font-size': '30px'}),
-         html.Div(['Contact:'], style={'text-decoration': 'underline', 'color': 'skyblue', 'font-size': '30px'}),
-         html.A([html.Img(src='assets/fb.png')], href='https://www.facebook.com/cbhuber/'),
-         html.A([html.Img(src='assets/li.png', style={'margin-left': '10px'})],
-                href='https://www.linkedin.com/in/cbhuber/')],
-        style={'text-align': 'center'},
+        [
+            html.Div(
+                ['This page was created using python apps: Plotly and Dash - Content developed by Colin Huber'],
+                style={'font-size': '30px'}
+            ),
+         html.Div(
+             ['Contact:'], style={'text-decoration': 'underline', 'color': 'skyblue', 'font-size': '30px'}
+         ),
+         html.A(
+             [
+                 html.Img(src='assets/fb.png')
+             ], href='https://www.facebook.com/cbhuber/'),
+         html.A(
+             [
+                 html.Img(src='assets/li.png', style={'margin-left': '10px'})
+             ], href='https://www.linkedin.com/in/cbhuber/')
+        ], style={'text-align': 'center'},
     ),
-    html.Div(['Ⓒ Colin Huber 2022, Distributed under the MIT License'], style={'text-align': 'center'})
-
+    html.Div(
+        ['Ⓒ Colin Huber 2022, Distributed under the MIT License'], style={'text-align': 'center'}
+    )
 ], id='main')
 
 
