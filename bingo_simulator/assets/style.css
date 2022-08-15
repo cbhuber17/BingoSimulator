@@ -6,6 +6,55 @@
     height: 100vh;
 }
 
+header {
+    text-align: center;
+    text-decoration: underline;
+}
+
+h2 {
+    display: inline-block;
+     color: red;
+}
+
+#radio_options {
+    display: inline-block;
+}
+
+#histo-detail {
+    text-align: center;
+}
+
+#h2pie {
+    display: inline-block;
+    color: red;
+}
+
+#pie-detail {
+    text-align: center;
+}
+
+#ft-title {
+    font-size: 30px;
+}
+
+#ft-contact {
+    text-decoration: underline;
+    color: skyblue;
+    font-size: 30px;
+}
+
+footer {
+    text-align: center;
+}
+
+#copyright {
+    text-align: center;
+}
+
+#li {
+    margin-left: 10px;
+}
+
 @media only screen and (max-device-height: 420px) {
 
     #graph1 {

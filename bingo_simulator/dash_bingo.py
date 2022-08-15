@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output
 from plot_bingo import plot_bingo_histo, plot_bingo_pie, FONT_FAMILY
 from dash.exceptions import PreventUpdate
 
-app = dash.Dash(__name__, assets_folder='assets')
+app = dash.Dash(__name__, assets_folder='assets', title='Bingo Simulator', update_title='Please wait...')
 
 server = app.server
 
@@ -28,12 +28,14 @@ app.layout = html.Div(
         html.Header(
             [
                 html.H1("BINGO Simulator! Statistics on the BINGO game played {:,} times!".format(NUM_SIMULATIONS)),
-            ], style={'text-align': 'center', 'text-decoration': 'underline'}
+            ]
     ),
     html.Div(
         [
             daq.ToggleSwitch(id='dark-mode-switch',
-                             label=dict(label='View Page in Dark Mode:', style={'font-size': '20px'}),
+                             label=dict(label='View Page in Dark Mode:',
+                                        style={'font-size': '20px'}  # Unable to determine CSS to target this label
+                                        ),
                              value=True,
                              size=50,
                              color='skyblue')
@@ -41,40 +43,40 @@ app.layout = html.Div(
     ),
     html.Div(
         [
-            html.H2("Select Level of Detail for Histogram:", style={'display': 'inline-block', 'color': "red"}),
+            html.H2("Select Level of Detail for Histogram:"),
             dcc.RadioItems(
                 ["Small", "Medium", "Large"],
                 inline=True,
                 id="radio_options",
                 value="Large",
-                labelStyle={'margin-left': '15px'},
-                style={'display': 'inline-block'}
+                labelStyle={'margin-left': '15px'}
             )
-        ], style={'text-align': 'center'}
+        ], id='histo-detail'
     ),
     dcc.Graph(id="graph1", mathjax='cdn', responsive='auto'),
     html.Hr(),
     html.Div(
         [
-            html.H2("Select Level of Detail for Pie:", style={'display': 'inline-block', 'color': "red"}),
+            html.H2(["Select Level of Detail for Pie:"], id='h2pie'),
             dcc.RadioItems(
                 ["Small", "Large", "Separate"],
                 id="radio_options_pie",
                 value="Large",
                 inline=True,
                 labelStyle={'margin-left': '15px'},
-                style={'display': 'inline-block'})
-        ], style={'text-align': 'center'}),
+                style={'display': 'inline-block'}  # Unable to determine CSS to target this label
+            )
+        ], id='pie-detail'),
     dcc.Graph(id="graph2", responsive='auto'),
     html.Hr(),
     html.Footer(
         [
             html.Div(
                 ['This page was created using python apps: Plotly and Dash - Content developed by Colin Huber'],
-                style={'font-size': '30px'}
+                id='ft-title'
             ),
          html.Div(
-             ['Contact:'], style={'text-decoration': 'underline', 'color': 'skyblue', 'font-size': '30px'}
+             ['Contact:'], id='ft-contact'
          ),
          html.A(
              [
@@ -82,12 +84,12 @@ app.layout = html.Div(
              ], href='https://www.facebook.com/cbhuber/'),
          html.A(
              [
-                 html.Img(src='assets/li.png', style={'margin-left': '10px'})
+                 html.Img(src='assets/li.png', id='li')
              ], href='https://www.linkedin.com/in/cbhuber/')
-        ], style={'text-align': 'center'},
+        ],
     ),
     html.Div(
-        ['Ⓒ Colin Huber 2022, Distributed under the MIT License'], style={'text-align': 'center'}
+        ['Ⓒ Colin Huber 2022, Distributed under the MIT License'], id='copyright'
     )
 ], id='main')
 
