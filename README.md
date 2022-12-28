@@ -1,4 +1,5 @@
 # Bingo Simulator
+
 Just a simple bingo simulator, is not the actual game!
 
 ## Table of Contents
@@ -7,21 +8,23 @@ Just a simple bingo simulator, is not the actual game!
 2. [Local Setup](#local-setup)
 3. [Running Dash Server](#running-dash-server)
 4. [Heroku Deployment](#heroku-deployment)
-5. [Testing](#testing)
+5. [OnRender Deployment](#onrender-deployment)
+6. [Testing](#testing)
 
 ## Background Information
 
 BINGO is a traditional game where a person is given a 5x5 card with the following characteristics:
+
 - Under the B column, five random numbers between 1-15
 - Under the I column, five random numbers between 16-30
 - Under the N column, five random numbers between 31-45
 - Under the G column, five random numbers between 46-60
 - Under the O column, five random numbers between 61-75
 
-
 A random number ("bingo ball") is called, and if the number is on the bingo card, it is considered marked at the spot on the bingo card.
 
 To win a bingo game, a pattern is required, either as:
+
 - Any row
 
 ```
@@ -53,7 +56,6 @@ Example Column G (column 3) BINGO:
 ```
 
 - Any diagonal
-
 
 ```
 Diagonal 1:
@@ -94,7 +96,7 @@ Diagonal 2:
 ------------------------
 ```
 
-More information is available on [BINGO Wikipeida](#https://en.wikipedia.org/wiki/Bingo_(American_version)).
+More information is available on [BINGO Wikipeida](<#https://en.wikipedia.org/wiki/Bingo_(American_version)>).
 
 Note: Simulations do not include the FREE CELL as marked in the middle of the board.
 
@@ -102,10 +104,9 @@ Note: Simulations do not include the FREE CELL as marked in the middle of the bo
 
 **Note:** The instructions below are for a Windows platform using Python 3.9.X.
 
-
 ### Project Directory
 
-Create a folder on your PC to host the project files.  Navigate to the root folder and open a command window ```(Windows Key + cmd.exe)``` at this location.
+Create a folder on your PC to host the project files. Navigate to the root folder and open a command window `(Windows Key + cmd.exe)` at this location.
 
 ### Virtual Environment
 
@@ -115,11 +116,11 @@ Create the virtual environment in hte root folder by running the following comma
 python -m venv bingo_env
 ```
 
-For Windows, this means going into the ```bingo_env\Scripts``` folder(by using the ```cd``` command in ```cmd.exe```) and running ```activate``` via command prompt.  Now this command prompt has ```(bingo_env)``` in it and is the virtual environment for this project, only containing the dependencies required for it (i.e. those from [requirements.txt](requirements.txt)).
+For Windows, this means going into the `bingo_env\Scripts` folder(by using the `cd` command in `cmd.exe`) and running `activate` via command prompt. Now this command prompt has `(bingo_env)` in it and is the virtual environment for this project, only containing the dependencies required for it (i.e. those from [requirements.txt](requirements.txt)).
 
 ### PIP Dependencies
 
-Once you have your virtual environment setup and running, install dependencies by navigating to the root directory in the command window (```cd..``` twice) and running:
+Once you have your virtual environment setup and running, install dependencies by navigating to the root directory in the command window (`cd..` twice) and running:
 
 ```
 pip install -r requirements.txt
@@ -129,7 +130,7 @@ This will install all of the required packages we selected within the `requireme
 
 ## Running Dash Server
 
-Change directory ```cd``` into the [bingo_simulator](bingo_simulator) folder.  Run the dashboard as:
+Change directory `cd` into the [bingo_simulator](bingo_simulator) folder. Run the dashboard as:
 
 ```
 python dash_bingo.py
@@ -139,12 +140,17 @@ The server will start at [http://127.0.0.1:8050/](http://127.0.0.1:8050/)
 
 ## Heroku Deployment
 
-The app is located at: https://bingo-simulator.herokuapp.com/
+~~The app is located at: https://bingo-simulator.herokuapp.com/~~
+
+## OnRender Deployment
+
+The app has been moved to: https://bingo-simulator.onrender.com/
 
 ## Testing
 
-The bingo_card.py](bingo_simulator/bingo_card.py) class has been unit tested in the [test](test) folder using ```tox```.
+The bingo_card.py](bingo_simulator/bingo_card.py) class has been unit tested in the [test](test) folder using `tox`.
 All forms of winning bingo patters were tested, particularly:
+
 - Valid row, column, diagonal, and corners BINGO
 - Invalid row, column, diagonal, and corners BINGO
 
