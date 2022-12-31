@@ -42,7 +42,8 @@ def get_bar_object(df, df_name, name, marker_color, marker_line_color):
 
     return go.Bar(x=df.index, y=df[df_name], name=name, opacity=1,
                   marker=dict(color=marker_color),
-                  marker_line=dict(width=1, color=marker_line_color))
+                  marker_line=dict(width=1, color=marker_line_color),
+                  hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
 
 
 # ------------------------------------------------------------------------
@@ -82,6 +83,10 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
 
     # Generate curve model
     y_gauss_curve = gauss_curve(df.index, *curve_param)
+
+    # Generate CDF
+    df['num_bingo_tries_sum'] = df['num_bingo_tries'].cumsum()
+    df['num_bingo_tries_cdf'] = (df['num_bingo_tries_sum'] / num_simulations) * 100
 
     # Get bar graph (stacked) objects
     data_total = get_bar_object(df, 'num_bingo_tries', 'frequency', pc.qualitative.Plotly[0],
@@ -138,7 +143,10 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
     data_selector = {"Small": data_small, "Medium": data_medium, "Large": data_large}
 
     # Gauss best-fit curve
-    data2 = go.Scatter(x=df.index, y=y_gauss_curve, name="Gauss Fit", line=dict(width=4, color='red'))
+    data2 = go.Scatter(x=df.index, y=y_gauss_curve, name="Gauss Fit", line=dict(width=4, color='red'), hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
+
+    # CDF
+    cdf_data = go.Scatter(x=df.index, y=df['num_bingo_tries_cdf'], name="CDF", line=dict(width=4, color='blue'), hovertemplate='%{x} bingo balls resulted in %{y:.0f}% bingo wins<extra></extra>')
 
     layout = go.Layout(
         title={
@@ -193,10 +201,13 @@ def plot_bingo_histo(df, detail_size="Large", plot_offline=True, dark_mode=True)
     borderpad = 35
     bgcolor = color_mode['an_bgcolor'][dark_mode]
 
-    # Create figure
-    fig = go.Figure(data=data_selector[detail_size], layout=layout)
-    fig.add_trace(data2)
-    fig.update_traces(hovertemplate='%{x} bingo balls happened %{y:.0f} times<extra></extra>')
+    # Create the figure; CDF will be plotted on secondary axis
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.update_layout(layout)
+    fig.add_traces(data_selector[detail_size])
+    fig.add_trace(data2, secondary_y=False)
+    fig.add_trace(cdf_data, secondary_y=True)
+    fig.update_yaxes(title_text='Cumulative Distribution (%)', secondary_y=True, showgrid=False, range=[0, 100])
 
     # Arrow annotation of the equation of the curve
     fig.add_annotation(x=x_annotation_point, y=y_annotation_point, text=equation_to_show, showarrow=True,

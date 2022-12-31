@@ -43,6 +43,12 @@ class BingoStats:
         self.df_tries['num_bingo_tries'] = pd.DataFrame(0, index=range(bc.CARD_LENGTH * bc.COLUMN_RANGE),
                                                         columns=range(1))
 
+        self.df_tries['num_bingo_tries_sum'] = pd.DataFrame(0, index=range(bc.CARD_LENGTH * bc.COLUMN_RANGE),
+                                                            columns=range(1))
+
+        self.df_tries['num_bingo_tries_cdf'] = pd.DataFrame(0, index=range(bc.CARD_LENGTH * bc.COLUMN_RANGE),
+                                                            columns=range(1))
+
         for i in range(0, bc.CARD_LENGTH):
             self.df_tries[f'num_tries_row{i}'] = pd.DataFrame(0, index=range(bc.CARD_LENGTH * bc.COLUMN_RANGE),
                                                               columns=range(1))
